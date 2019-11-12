@@ -2,8 +2,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Board {
+    //Fireable spaces with a ship on them
     HashSet<Integer> shipSpaces;
+    //Fireable spaces
     HashSet<Integer> availableMoves;
+    //All floating ships on the board
     ArrayList<Ship> floatingShips;
 
     public Board() {
@@ -48,5 +51,33 @@ public class Board {
 
     public boolean checkShipAtSpace(int index) {
         return shipSpaces.contains(index);
+    }
+
+    public int getBestMove() {
+        /**ADD CHECK AROUND SHIP SPACES THAT HAVE BEEN FIRED ON*/
+        int averageLength = getAverageShipLength();
+
+        HashSet<Integer> bestMoves = (HashSet<Integer>) availableMoves.clone();
+
+
+        /**REMOVE*/
+        return 0;
+
+    }
+
+    private int getAverageShipLength() {
+        int averageLength = 0;
+        for(Ship ship : floatingShips) {
+            averageLength += ship.getLength();
+        }
+        averageLength = averageLength/shipSpaces.size();
+        return averageLength;
+    }
+
+    private boolean checkVerticalConnection(int start, int end) {
+
+
+        /**REMOVE*/
+        return true;
     }
 }
