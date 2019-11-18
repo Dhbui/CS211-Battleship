@@ -1,0 +1,30 @@
+Dylan Bui, Janelle Miranda
+Dr. Mengistu
+
+Objective:
+The goal of this project is to create a program where a user is able to play the game Battleship against a computer.
+
+Overall Progress:
+The necessary files have been created that represent an individual board and ships in the a game of Battleship.
+This includes:
+    1) A Board object that can
+        A) Store available spaces for firing moves
+        B) Store spaces that are occupied by ships
+        C) Store all floating ships on the board
+        D) Add ships
+        E) Fire at spaces
+    2) A Ship object that
+        A) Holds information about what spaces are occupied by that ship
+        B) Stores the length of the ship
+    3) An Enum that represents the orientation (Horizontal or Vertical) of a ship
+
+Current Work:
+GUI for the user to play the game.
+Computerized decision making.
+    The computer's decisions for shots will be based on:
+        1) Previous shots that have hit ships
+            i) After hitting a shot, the computer will circle all orientations around the hit until it makes a second hit.
+            ii) The computer will then follow the direction of the two shots until hit sinks the ship or hits water.
+            iii) The computer will then continue in the opposite direction if the ship has not sunk yet.
+        2) Utilizing the average length of remaining ships to randomly fire at spaces that have a straight connected length equal to or greater than the average.
+Additionally, creating a difficulty setting for the computer's decision making which would decrease the quality and increase randomness of each shot is under consideration.
