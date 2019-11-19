@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class Board {
@@ -8,6 +9,12 @@ public class Board {
     HashSet<Integer> availableMoves;
     //All floating ships on the board
     ArrayList<Ship> floatingShips;
+
+    HashMap<Integer, Integer> verticalConnections;
+
+    HashMap<Integer, Integer> horizontalConnections;
+
+    HashMap<Integer, Integer> totalConnections;
 
     public Board() {
         shipSpaces = new HashSet<>();
@@ -74,8 +81,7 @@ public class Board {
         return averageLength;
     }
 
-    private boolean checkVerticalConnection(int start, int end) {
-
+    private boolean checkVerticalConnection(int space, int length) {
 
         /**REMOVE*/
         return true;
