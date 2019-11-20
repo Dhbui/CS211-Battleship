@@ -9,12 +9,18 @@ public class Board {
     HashSet<Integer> availableMoves;
     //All floating ships on the board
     ArrayList<Ship> floatingShips;
-
+    //Number of vertically connected spaces of length averageShipLength that each square is part of
     HashMap<Integer, Integer> verticalConnections;
-
+    //Number of horizontally connected spaces of length averageShipLength that each square is part of
     HashMap<Integer, Integer> horizontalConnections;
-
+    //Sum of each space's vertical and horizontal connections
     HashMap<Integer, Integer> totalConnections;
+    //List of all moves made
+    int[] movesMade;
+    //Current move number
+    int currMove;
+    //Average length of all surviving Ships
+    int averageShipLength;
 
     public Board() {
         shipSpaces = new HashSet<>();
@@ -23,6 +29,12 @@ public class Board {
             availableMoves.add(i);
         }
         floatingShips = new ArrayList<>(5);
+        verticalConnections = new HashMap<>();
+        horizontalConnections = new HashMap<>();
+        totalConnections = new HashMap<>();
+        movesMade = new int[100];
+        currMove = 0;
+        averageShipLength = 3;
     }
 
     //Returns false if ship could not be added, true otherwise
@@ -51,6 +63,7 @@ public class Board {
             if(checkShipAtSpace(index)) {
                 shipSpaces.remove(index);
             }
+            movesMade[currMove++] = index;
             return true;
         }
         return false;
@@ -62,9 +75,7 @@ public class Board {
 
     public int getBestMove() {
         /**ADD CHECK AROUND SHIP SPACES THAT HAVE BEEN FIRED ON*/
-        int averageLength = getAverageShipLength();
-
-        HashSet<Integer> bestMoves = (HashSet<Integer>) availableMoves.clone();
+        updateAverageShipLength();
 
 
         /**REMOVE*/
@@ -72,13 +83,30 @@ public class Board {
 
     }
 
-    private int getAverageShipLength() {
+    private void updateAverageShipLength() {
         int averageLength = 0;
+        updateFloatingShips();
         for(Ship ship : floatingShips) {
             averageLength += ship.getLength();
         }
         averageLength = averageLength/shipSpaces.size();
-        return averageLength;
+        averageShipLength = averageLength;
+    }
+
+    private void updateFloatingShips() {
+        ArrayList<Ship> newList = new ArrayList<>();
+        for(Ship ship : floatingShips) {
+            boolean floating = false;
+            for(int space : ship.getSpaces()) {
+                if(availableMoves.contains(space)) {
+                    floating = true;
+                }
+            }
+            if(floating) {
+                newList.add(ship);
+            }
+        }
+        floatingShips = newList;
     }
 
     private boolean checkVerticalConnection(int space, int length) {
