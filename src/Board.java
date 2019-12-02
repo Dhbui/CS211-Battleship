@@ -111,7 +111,18 @@ public class Board {
 
     private boolean checkVerticalConnection(int space, int length) {
 
-        /**REMOVE*/
+        for(int i = 0; i < length; i++) {
+            if(!availableMoves.contains(space + i * 10))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean checkHorizontalConnection(int space, int length) {
+        for(int i = 0; i < length; i++) {
+            if(!availableMoves.contains(space + i))
+                return false;
+        }
         return true;
     }
 }
