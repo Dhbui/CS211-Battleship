@@ -5,6 +5,7 @@ public class BattleshipGame {
     private int turnCount;
     private boolean isGameOver;
     private String type;
+    private boolean cpuPlaying;
 
     public BattleshipGame(String type) {
         player1 = new Board();
@@ -13,6 +14,7 @@ public class BattleshipGame {
         turnCount = 0;
         isGameOver = false;
         this.type = type;
+        cpuPlaying = type.equals("Single");
     }
 
     public void printBoardIndexing() {
