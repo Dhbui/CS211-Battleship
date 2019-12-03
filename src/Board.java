@@ -36,12 +36,13 @@ public class Board {
         horizontalConnections = new HashMap<>();
         totalConnections = new HashMap<>();
 
+        averageShipLength = 3;
+
         updateVerticalConnections();
         updateHorizontalConnections();
         updateTotalConnections();
 
         hits = new ArrayList<>();
-        averageShipLength = 3;
     }
 
     //Returns false if ship could not be added, true otherwise
@@ -210,7 +211,7 @@ public class Board {
     private void updateVerticalConnections() {
         verticalConnections = new HashMap<>();
         int lastRow = 9 - (averageShipLength - 1);
-        for(int i = 0; i < lastRow * 10 + 9; i++) {
+        for(int i = 0; i <= lastRow * 10 + 9; i++) {
             if(checkVerticalConnection(i, averageShipLength)) {
                 for(int j = 0; j < averageShipLength; j++) {
                     if(verticalConnections.containsKey(i + j * 10)) {
@@ -227,7 +228,7 @@ public class Board {
     private void updateHorizontalConnections() {
         horizontalConnections = new HashMap<>();
         int lastColumn = 9 - (averageShipLength - 1);
-        for(int i = 0; i < lastColumn; i++) {
+        for(int i = 0; i <= lastColumn; i++) {
             for(int j = i; j < 100; j+= 10) {
                 if(checkHorizontalConnection(j, averageShipLength)) {
                     for(int k = 0; k < averageShipLength; k++) {
@@ -244,7 +245,18 @@ public class Board {
 
     private void updateTotalConnections() {
         for(int i = 0; i < 100; i++) {
-            totalConnections.put(i, horizontalConnections.get(i) + verticalConnections.get(i));
+            if(horizontalConnections.containsKey(i) && verticalConnections.containsKey(i)) {
+                totalConnections.put(i, horizontalConnections.get(i) + verticalConnections.get(i));
+            }
+            else if(horizontalConnections.containsKey(i) && !verticalConnections.containsKey(i)) {
+                totalConnections.put(i, horizontalConnections.get(i));
+            }
+            else if(!horizontalConnections.containsKey(i) && verticalConnections.containsKey(i)) {
+                totalConnections.put(i, verticalConnections.get(i));
+            }
+            else {
+                totalConnections.put(i, 0);
+            }
         }
     }
 
