@@ -38,6 +38,6 @@ public class BattleshipGame {
     }
 
     public void promptMove() {
-
+        System.out.println("What's your move?");
     }
 }
