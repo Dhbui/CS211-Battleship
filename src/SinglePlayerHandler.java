@@ -6,10 +6,12 @@ public class SinglePlayerHandler {
         printBoardIndexing();
 
 
+
+
     }
 
     public static void printBoardIndexing() {
-        System.out.println("A\tB\tC\tD\tE\tF\tG\tH\tI\tJ");
+        System.out.println("\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ");
         for(int i = 1; i <= 10; i++) {
             String tabs = i + "";
             for(int j = 0; j < 10; j++) {
