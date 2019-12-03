@@ -1,18 +1,21 @@
+import java.util.ArrayList;
+
 public class Ship {
     private int length;
-    private int[] spaces;
+    private ArrayList<Integer> spaces;
+    private String type;
 
     public Ship(int length, int firstIndex, Orientation state) {
         this.length = length;
-        spaces = new int[length];
+        spaces = new ArrayList<>(length);
         if(state == Orientation.HORIZONTAL) {
             for(int i = 0; i < length; i++) {
-                spaces[i] = i + firstIndex;
+                spaces.add(i + firstIndex);
             }
         }
         else {
             for(int i = 0; i < length; i++) {
-                spaces[i] = firstIndex + i * 10;
+                spaces.add(firstIndex + i * 10);
             }
         }
     }
@@ -25,11 +28,11 @@ public class Ship {
         this.length = length;
     }
 
-    public int[] getSpaces() {
+    public ArrayList<Integer> getSpaces() {
         return spaces;
     }
 
-    public void setSpaces(int[] spaces) {
+    public void setSpaces(ArrayList<Integer> spaces) {
         this.spaces = spaces;
     }
 }

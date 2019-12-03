@@ -16,9 +16,7 @@ public class Board {
     //Sum of each space's vertical and horizontal connections
     HashMap<Integer, Integer> totalConnections;
     //List of all moves made
-    int[] movesMade;
-    //Current move number
-    int currMove;
+    ArrayList<Integer> hits;
     //Average length of all surviving Ships
     int averageShipLength;
     //Difficulty
@@ -26,16 +24,22 @@ public class Board {
 
     public Board() {
         shipSpaces = new HashSet<>();
+
         availableMoves = new HashSet<>();
         for(int i = 0; i < 100; i++) {
             availableMoves.add(i);
         }
         floatingShips = new ArrayList<>();
+
         verticalConnections = new HashMap<>();
         horizontalConnections = new HashMap<>();
         totalConnections = new HashMap<>();
-        movesMade = new int[100];
-        currMove = 0;
+
+        updateVerticalConnections();
+        updateHorizontalConnections();
+        updateTotalConnections();
+
+        hits = new ArrayList<>();
         averageShipLength = 3;
     }
 
@@ -47,13 +51,15 @@ public class Board {
     public boolean addShip(Ship ship) {
         boolean possibleShip = true;
         for(int i = 0; i < ship.getLength(); i++) {
-            if(shipSpaces.contains(ship.getSpaces()[i]))
+            if (shipSpaces.contains(ship.getSpaces().get(i))) {
                 possibleShip = false;
+                break;
+            }
         }
         if(!possibleShip)
             return false;
         for(int i = 0; i < ship.getLength(); i++) {
-            shipSpaces.add(ship.getSpaces()[i]);
+            shipSpaces.add(ship.getSpaces().get(i));
         }
         floatingShips.add(ship);
         return true;
@@ -63,9 +69,18 @@ public class Board {
         if(availableMoves.contains(index)) {
             availableMoves.remove(index);
             if(checkShipAtSpace(index)) {
+                hits.add(index);
+                if(checkIfShipWillSink(index)) {
+                    Ship s = shipWithIndex(index);
+                    for (int space : s.getSpaces()) {
+                        if (hits.contains(space))
+                            hits.remove((Integer) space);
+
+                    }
+                }
                 shipSpaces.remove(index);
+
             }
-            movesMade[currMove++] = index;
             return true;
         }
         return false;
@@ -100,8 +115,9 @@ public class Board {
         for(Ship ship : floatingShips) {
             boolean floating = false;
             for(int space : ship.getSpaces()) {
-                if(availableMoves.contains(space)) {
+                if (availableMoves.contains(space)) {
                     floating = true;
+                    break;
                 }
             }
             if(floating) {
@@ -112,8 +128,44 @@ public class Board {
     }
 
     private void updateVerticalConnections() {
+        verticalConnections = new HashMap<>();
         int lastRow = 9 - (averageShipLength - 1);
+        for(int i = 0; i < lastRow * 10 + 9; i++) {
+            if(checkVerticalConnection(i, averageShipLength)) {
+                for(int j = 0; j < averageShipLength; j++) {
+                    if(verticalConnections.containsKey(i + j * 10)) {
+                        verticalConnections.put(i + j * 10, verticalConnections.get(i + j * 10) + 1);
+                    }
+                    else{
+                        verticalConnections.put(i + j * 10, 1);
+                    }
+                }
+            }
+        }
+    }
 
+    private void updateHorizontalConnections() {
+        horizontalConnections = new HashMap<>();
+        int lastColumn = 9 - (averageShipLength - 1);
+        for(int i = 0; i < lastColumn; i++) {
+            for(int j = i; j < 100; j+= 10) {
+                if(checkHorizontalConnection(j, averageShipLength)) {
+                    for(int k = 0; k < averageShipLength; k++) {
+                        if (horizontalConnections.containsKey(j + k)) {
+                            horizontalConnections.put(j + k, horizontalConnections.get(j + k) + 1);
+                        } else {
+                            horizontalConnections.put(j + k, 1);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void updateTotalConnections() {
+        for(int i = 0; i < 100; i++) {
+            totalConnections.put(i, horizontalConnections.get(i) + verticalConnections.get(i));
+        }
     }
 
     private boolean checkVerticalConnection(int space, int length) {
@@ -158,10 +210,8 @@ public class Board {
         verticalConnections.clear();
         horizontalConnections.clear();
         totalConnections.clear();
-        movesMade = new int[100];
-        currMove = 0;
+        hits.clear();
         averageShipLength = 0;
-
     }
 
     private void resetAvailableMoves() {
@@ -169,5 +219,31 @@ public class Board {
         for(int i = 0; i < 100; i++) {
             availableMoves.add(i);
         }
+    }
+
+    private boolean checkIfShipWillSink(int index) {
+        for(Ship s : floatingShips) {
+            if(s.getSpaces().contains(index)) {
+                for(int space : s.getSpaces()) {
+                    if(space != index) {
+                        if(availableMoves.contains(space))
+                            return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private Ship shipWithIndex(int index) {
+        for(Ship s : floatingShips) {
+            if(s.getSpaces().contains(index))
+                return s;
+        }
+        return null;
+    }
+
+    public boolean checkGameOver() {
+        return floatingShips.size() == 0 || availableMoves.size() == 0;
     }
 }
