@@ -17,6 +17,15 @@ public class BattleshipGame {
         cpuPlaying = type.equals("Single");
     }
 
+    public void runGame() {
+        while(!isGameOver) {
+            if(player1Turn) {
+                promptMove();
+
+            }
+        }
+    }
+
     public void printBoardIndexing() {
         System.out.println("\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ");
         for(int i = 1; i <= 10; i++) {
@@ -26,5 +35,9 @@ public class BattleshipGame {
             }
             System.out.println(tabs);
         }
+    }
+
+    public void promptMove() {
+
     }
 }
