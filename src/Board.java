@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 
 public class Board {
     //Fireable spaces with a ship on them
@@ -92,12 +93,44 @@ public class Board {
 
     public int getBestMove() {
         /**ADD CHECK AROUND SHIP SPACES THAT HAVE BEEN FIRED ON*/
-        updateAverageShipLength();
+        if(hits.size() != 0) {
+            int index = hits.get(0);
+            if(hits.contains(index - 10)) {
+                index = index - 10;
 
+            }
+        }
+        else {
 
-        /**REMOVE*/
-        return 0;
+            updateAverageShipLength();
 
+            ArrayList<Integer> maxConnections = generateMaxConnections();
+            int moveToMake = maxConnections.get((int) (Math.random() * (maxConnections.size())));
+            return moveToMake;
+        }
+    }
+
+    private ArrayList<Integer> generateMaxConnections() {
+        updateVerticalConnections();
+        updateHorizontalConnections();
+        updateTotalConnections();
+
+        int max = 0;
+        for(int key : totalConnections.keySet()) {
+            if(totalConnections.get(key) > max) {
+                max = totalConnections.get(key);
+            }
+        }
+
+        ArrayList<Integer> toReturn = new ArrayList<>();
+
+        for(int key : totalConnections.keySet()) {
+            if(totalConnections.get(key) == max) {
+                toReturn.add(key);
+            }
+        }
+
+        return toReturn;
     }
 
     private void updateAverageShipLength() {
