@@ -94,11 +94,32 @@ public class Board {
     public int getBestMove() {
         /**ADD CHECK AROUND SHIP SPACES THAT HAVE BEEN FIRED ON*/
         if(hits.size() != 0) {
-            int index = hits.get(0);
-            if(hits.contains(index - 10)) {
-                index = index - 10;
-
+            int currIndex = hits.get(0);
+            while(hits.contains(currIndex)) {
+                currIndex = currIndex - 10;
             }
+            if(availableMoves.contains(currIndex))
+                return currIndex;
+            currIndex = hits.get(0);
+            while(hits.contains(currIndex)) {
+                currIndex = currIndex + 10;
+            }
+            if(availableMoves.contains(currIndex))
+                return currIndex;
+            currIndex = hits.get(0);
+            while(hits.contains(currIndex)) {
+                currIndex--;
+            }
+            if(availableMoves.contains(currIndex)) {
+                return currIndex;
+            }
+            currIndex = hits.get(0);
+            while(hits.contains(currIndex)) {
+                currIndex++;
+            }
+            if(availableMoves.contains(currIndex))
+                return currIndex;
+            return -1;
         }
         else {
 
