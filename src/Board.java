@@ -21,6 +21,8 @@ public class Board {
     int currMove;
     //Average length of all surviving Ships
     int averageShipLength;
+    //Difficulty
+    int difficulty;
 
     public Board() {
         shipSpaces = new HashSet<>();
@@ -28,7 +30,7 @@ public class Board {
         for(int i = 0; i < 100; i++) {
             availableMoves.add(i);
         }
-        floatingShips = new ArrayList<>(5);
+        floatingShips = new ArrayList<>();
         verticalConnections = new HashMap<>();
         horizontalConnections = new HashMap<>();
         totalConnections = new HashMap<>();
@@ -109,10 +111,24 @@ public class Board {
         floatingShips = newList;
     }
 
+    private void updateVerticalConnections() {
+        int lastRow = 9 - (averageShipLength - 1);
+
+    }
+
     private boolean checkVerticalConnection(int space, int length) {
 
         for(int i = 0; i < length; i++) {
             if(!availableMoves.contains(space + i * 10))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean checkVerticalConnection2(int start, int end) {
+        int length = end/10 - start/10;
+        for(int i = 0; i < length; i++) {
+            if(!availableMoves.contains(start + i * 10))
                 return false;
         }
         return true;
@@ -124,5 +140,34 @@ public class Board {
                 return false;
         }
         return true;
+    }
+
+    private boolean checkHorizontalConnection2(int start, int end) {
+        int length = end - start;
+        for(int i = 0; i < length; i++) {
+            if(!availableMoves.contains(start + i))
+                return false;
+        }
+        return true;
+    }
+
+    public void reset() {
+        resetAvailableMoves();
+        shipSpaces.clear();
+        floatingShips.clear();
+        verticalConnections.clear();
+        horizontalConnections.clear();
+        totalConnections.clear();
+        movesMade = new int[100];
+        currMove = 0;
+        averageShipLength = 0;
+
+    }
+
+    private void resetAvailableMoves() {
+        availableMoves.clear();
+        for(int i = 0; i < 100; i++) {
+            availableMoves.add(i);
+        }
     }
 }
