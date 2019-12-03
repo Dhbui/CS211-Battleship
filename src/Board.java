@@ -49,6 +49,10 @@ public class Board {
         return addShip(new Ship(length, index, state));
     }
 
+    public boolean addShip(int index, int length, Orientation state, String name) {
+        return addShip(new Ship(length, index, state, name));
+    }
+
     public boolean addShip(Ship ship) {
         boolean possibleShip = true;
         for(int i = 0; i < ship.getLength(); i++) {
@@ -92,7 +96,6 @@ public class Board {
     }
 
     public int getBestMove() {
-        /**ADD CHECK AROUND SHIP SPACES THAT HAVE BEEN FIRED ON*/
         if(hits.size() != 0) {
             int currIndex = hits.get(0);
             while(hits.contains(currIndex)) {
@@ -129,6 +132,29 @@ public class Board {
             int moveToMake = maxConnections.get((int) (Math.random() * (maxConnections.size())));
             return moveToMake;
         }
+    }
+
+    public void placeShipsRandomly() {
+        int[] lengths = {2, 3, 3, 4, 5};
+        String[] names = {"Patrol Boat", "Submarine", "Destroyer", "Battleship", "Carrier"};
+        for(int i = 0; i < 5; i++) {
+            int index;
+            Orientation o = null;
+            do {
+                index = (int) (Math.random() * 100);
+                int orientation = (int) (Math.random() * 2);
+                switch(orientation) {
+                    case 0:
+                        o = Orientation.HORIZONTAL;
+                        break;
+                    case 1:
+                        o = Orientation.VERTICAL;
+                        break;
+                }
+            }
+            while(addShip(lengths[i], index, o, names[i]));
+        }
+
     }
 
     private ArrayList<Integer> generateMaxConnections() {

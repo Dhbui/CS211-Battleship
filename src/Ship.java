@@ -20,6 +20,22 @@ public class Ship {
         }
     }
 
+    public Ship(int length, int firstIndex, Orientation state, String name) {
+        this.length = length;
+        spaces = new ArrayList<>(length);
+        if(state == Orientation.HORIZONTAL) {
+            for(int i = 0; i < length; i++) {
+                spaces.add(i + firstIndex);
+            }
+        }
+        else {
+            for(int i = 0; i < length; i++) {
+                spaces.add(firstIndex + i * 10);
+            }
+        }
+        type = name;
+    }
+
     public int getLength() {
         return length;
     }
