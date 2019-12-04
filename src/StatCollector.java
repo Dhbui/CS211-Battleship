@@ -1,14 +1,20 @@
+import java.time.Duration;
+import java.time.Instant;
+
 public class StatCollector {
     public static void main(String[] args) {
         BattleshipGame test = new BattleshipGame("");
         int p1wins = 0;
-        for(int i = 0; i < 1000; i++) {
-            test.setupGame();
-            test.runGame();
+        int numberOfGames = 100000;
+        Instant start = Instant.now();
+        for(int i = 0; i < numberOfGames; i++) {
+            test.testTwoCPUSNoPrinting();
             if(test.getWinner())
                 p1wins++;
             test.resetGame();
         }
-        System.out.println("In 1000 games, CPU1 won " + p1wins + " times.");
+        Instant end = Instant.now();
+        System.out.println("In " + numberOfGames + " games, CPU1 won " + p1wins + " times.");
+        System.out.println("It took " + Duration.between(start, end).toMillis() + " milliseconds.");
     }
 }
