@@ -180,4 +180,40 @@ public class BattleshipGame {
         player1.reset();
         player2.reset();
     }
+
+    public void testTwoCPUS() {
+        player1.placeShipsRandomly();
+        player2.placeShipsRandomly();
+
+        while(!isGameOver) {
+            if (player1Turn) {
+                int move = player2.getBestMove();
+                player2.fireAtSpace(move);
+                System.out.println("Computer's Move:");
+                player1Turn = false;
+                turnCount++;
+                System.out.println(player2);
+                System.out.println();
+                if (player2.isLastMoveHit())
+                    System.out.println("Hit!");
+                if (player2.isLastMoveSunk()) {
+                    System.out.println("You've sunk a " + player2.getLastSunkShip().getType() + "!\n\n");
+                }
+            } else {
+                int move = player1.getBestMove();
+                player1.fireAtSpace(move);
+                System.out.println("Computer's Move:");
+                player1Turn = true;
+                turnCount++;
+                System.out.println(player1);
+                System.out.println();
+                if (player1.isLastMoveHit())
+                    System.out.println("Hit!");
+                if (player1.isLastMoveSunk()) {
+                    System.out.println("You've sunk a " + player1.getLastSunkShip().getType() + "!\n\n");
+                }
+            }
+            checkGameOver();
+        }
+    }
 }
