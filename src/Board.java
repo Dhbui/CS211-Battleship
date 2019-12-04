@@ -194,7 +194,7 @@ public class Board {
                         break;
                 }
             }
-            while(addShip(lengths[i], index, o, names[i]));
+            while(addShip(index, lengths[i], o, names[i]));
         }
 
     }
