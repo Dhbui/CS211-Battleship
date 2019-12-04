@@ -51,4 +51,30 @@ public class Ship {
     public void setSpaces(ArrayList<Integer> spaces) {
         this.spaces = spaces;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean equals(Object o) {
+        if(!o.getClass().equals(this.getClass())) {
+            return false;
+        }
+        Ship s = (Ship) o;
+        if(s.getLength() != length)
+            return false;
+        if(s.getType().equals(type))
+            return false;
+        if(s.getSpaces().size() != spaces.size())
+            return false;
+        for(int space : s.getSpaces()) {
+            if(!spaces.contains(space))
+                return false;
+        }
+        return true;
+    }
 }

@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class BattleshipGame {
     private Board player1;
     private Board player2;
@@ -20,10 +22,29 @@ public class BattleshipGame {
     public void runGame() {
         while(!isGameOver) {
             if(player1Turn) {
-                promptMove();
-
+                int move = promptMove();
+                player2.fireAtSpace(move);
+                checkGameOver();
+                player1Turn = false;
+            }
+            else {
+                if(cpuPlaying) {
+                    int move = player1.getBestMove();
+                    player1.fireAtSpace(move);
+                    player1Turn = true;
+                }
+                else {
+                    int move = promptMove();
+                    player1.fireAtSpace(move);
+                    checkGameOver();
+                    player1Turn = true;
+                }
             }
         }
+    }
+
+    public void setupGame() {
+
     }
 
     public void printBoardIndexing() {
@@ -37,7 +58,14 @@ public class BattleshipGame {
         }
     }
 
-    public void promptMove() {
+    public int promptMove() {
         System.out.println("What's your move?");
+        Scanner input = new Scanner(System.in);
+        String move = input.nextLine();
+        return Integer.parseInt(move);
+    }
+
+    public void checkGameOver() {
+        isGameOver =  player1.checkGameOver() || player2.checkGameOver();
     }
 }

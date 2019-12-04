@@ -10,6 +10,8 @@ public class Board {
     HashSet<Integer> availableMoves;
     //All floating ships on the board
     ArrayList<Ship> floatingShips;
+    //All ships that started on the board
+    ArrayList<Ship> shipList;
     //Number of vertically connected spaces of length averageShipLength that each square is part of
     HashMap<Integer, Integer> verticalConnections;
     //Number of horizontally connected spaces of length averageShipLength that each square is part of
@@ -31,6 +33,7 @@ public class Board {
             availableMoves.add(i);
         }
         floatingShips = new ArrayList<>();
+        shipList = new ArrayList<>();
 
         verticalConnections = new HashMap<>();
         horizontalConnections = new HashMap<>();
@@ -68,6 +71,7 @@ public class Board {
             shipSpaces.add(ship.getSpaces().get(i));
         }
         floatingShips.add(ship);
+        shipList.add(ship);
         return true;
     }
 
@@ -83,6 +87,7 @@ public class Board {
                             hits.remove((Integer) space);
 
                     }
+                    floatingShips.remove(s);
                 }
                 shipSpaces.remove(index);
 
@@ -304,6 +309,7 @@ public class Board {
         totalConnections.clear();
         hits.clear();
         averageShipLength = 0;
+        shipList.clear();
     }
 
     private void resetAvailableMoves() {
@@ -337,5 +343,15 @@ public class Board {
 
     public boolean checkGameOver() {
         return floatingShips.size() == 0 || availableMoves.size() == 0;
+    }
+
+    public boolean removeShip(Ship s) {
+        if(shipList.contains(s)) {
+            shipList.remove(s);
+            floatingShips.remove(s);
+            return true;
+        }
+        return false;
+
     }
 }
