@@ -22,9 +22,9 @@ public class BattleshipGame {
     public void runGame() {
         while(!isGameOver) {
             if(player1Turn) {
+                System.out.println("Player1 Move:");
                 int move = promptMove();
                 player2.fireAtSpace(move);
-                checkGameOver();
                 player1Turn = false;
                 turnCount++;
                 System.out.println(player2);
@@ -37,17 +37,18 @@ public class BattleshipGame {
             }
             else {
                 if(cpuPlaying) {
+                    System.out.println("Computer Move:");
                     int move = player1.getBestMove();
                     player1.fireAtSpace(move);
-                    player1Turn = true;
                 }
                 else {
+                    System.out.println("Player2 Move:");
                     int move = promptMove();
                     player1.fireAtSpace(move);
-                    checkGameOver();
-                    player1Turn = true;
-                    turnCount++;
+
                 }
+                player1Turn = true;
+                turnCount++;
                 System.out.println(player1);
                 System.out.println();
                 if(player1.isLastMoveHit())
@@ -56,7 +57,13 @@ public class BattleshipGame {
                     System.out.println("You've sunk a " + player1.getLastSunkShip().getType() + "!");
                 }
             }
+            checkGameOver();
         }
+        System.out.println("Game Over!");
+        if (player1.getFloatingShips().size() == 0)
+            System.out.print("Player2 Wins!");
+        else
+            System.out.println("Player1 Wins!");
     }
 
     public void setupGame() {
@@ -80,10 +87,13 @@ public class BattleshipGame {
                     length = 5;
                     break;
             }
-            do {
+            System.out.println(player1.toStringWithShipSpaces());
+            s = promptForShip(name, length);
+            while(!player1.addShip(s)) {
+                System.out.println(player1.toStringWithShipSpaces());
                 s = promptForShip(name, length);
             }
-            while(player1.addShip(s));
+            System.out.println(player1.toStringWithShipSpaces());
         }
         if(cpuPlaying) {
             player2.placeShipsRandomly();
@@ -108,10 +118,13 @@ public class BattleshipGame {
                         length = 5;
                         break;
                 }
-                do {
+                System.out.println(player2.toStringWithShipSpaces());
+                s = promptForShip(name, length);
+                while(!player2.addShip(s)) {
+                    System.out.println(player2.toStringWithShipSpaces());
                     s = promptForShip(name, length);
                 }
-                while(player2.addShip(s));
+                System.out.println(player2.toStringWithShipSpaces());
             }
         }
     }
@@ -141,7 +154,6 @@ public class BattleshipGame {
         String index = input.nextLine();
         while(index.toLowerCase().equals("r")) {
             System.out.println("Where would you like to put your " + name + "?");
-            input = new Scanner(System.in);
             if(state == Orientation.HORIZONTAL)
                 state = Orientation.VERTICAL;
             else

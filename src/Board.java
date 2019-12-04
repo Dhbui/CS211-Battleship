@@ -77,6 +77,20 @@ public class Board {
                 possibleShip = false;
                 break;
             }
+            if(ship.getSpaces().get(i) >= 100) {
+                possibleShip = false;
+                break;
+            }
+        }
+        if(ship.getOrientation() == Orientation.HORIZONTAL) {
+            int row = ship.getSpaces().get(0) / 10;
+            for(int space : ship.getSpaces()) {
+                if(space / 10 != row) {
+                    possibleShip = false;
+                    break;
+                }
+            }
+
         }
         if(!possibleShip)
             return false;
@@ -439,5 +453,9 @@ public class Board {
             toReturn += "\n";
         }
         return toReturn;
+    }
+
+    public ArrayList<Ship> getFloatingShips() {
+        return floatingShips;
     }
 }

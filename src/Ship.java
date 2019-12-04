@@ -4,6 +4,7 @@ public class Ship {
     private int length;
     private ArrayList<Integer> spaces;
     private String type;
+    private Orientation orientation;
 
     public Ship(int length, int firstIndex, Orientation state) {
         this.length = length;
@@ -18,6 +19,7 @@ public class Ship {
                 spaces.add(firstIndex + i * 10);
             }
         }
+        orientation = state;
     }
 
     public Ship(int length, int firstIndex, Orientation state, String name) {
@@ -34,6 +36,7 @@ public class Ship {
             }
         }
         type = name;
+        orientation = state;
     }
 
     public int getLength() {
@@ -76,5 +79,13 @@ public class Ship {
                 return false;
         }
         return true;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
     }
 }
