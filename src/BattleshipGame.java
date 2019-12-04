@@ -26,6 +26,14 @@ public class BattleshipGame {
                 player2.fireAtSpace(move);
                 checkGameOver();
                 player1Turn = false;
+                turnCount++;
+                System.out.println(player2);
+                System.out.println();
+                if(player2.isLastMoveHit())
+                    System.out.println("Hit!");
+                if(player2.isLastMoveSunk()) {
+                    System.out.println("You've sunk a " + player2.getLastSunkShip().getType() + "!");
+                }
             }
             else {
                 if(cpuPlaying) {
@@ -38,13 +46,74 @@ public class BattleshipGame {
                     player1.fireAtSpace(move);
                     checkGameOver();
                     player1Turn = true;
+                    turnCount++;
+                }
+                System.out.println(player1);
+                System.out.println();
+                if(player1.isLastMoveHit())
+                    System.out.println("Hit!");
+                if(player1.isLastMoveSunk()) {
+                    System.out.println("You've sunk a " + player1.getLastSunkShip().getType() + "!");
                 }
             }
         }
     }
 
     public void setupGame() {
-
+        String[] shipNames = {"Patrol Boat", "Submarine", "Destroyer", "Battleship", "Carrier"};
+        for(int i = 0; i < 5; i++) {
+            String name = shipNames[i];
+            int length = 0;
+            Ship s;
+            switch(i) {
+                case 0:
+                    length = 2;
+                    break;
+                case 1:
+                case 2:
+                    length = 3;
+                    break;
+                case 3:
+                    length = 4;
+                    break;
+                case 4:
+                    length = 5;
+                    break;
+            }
+            do {
+                s = promptForShip(name, length);
+            }
+            while(player1.addShip(s));
+        }
+        if(cpuPlaying) {
+            player2.placeShipsRandomly();
+        }
+        else {
+            for(int i = 0; i < 5; i++) {
+                String name = shipNames[i];
+                int length = 0;
+                Ship s;
+                switch(i) {
+                    case 0:
+                        length = 2;
+                        break;
+                    case 1:
+                    case 2:
+                        length = 3;
+                        break;
+                    case 3:
+                        length = 4;
+                        break;
+                    case 4:
+                        length = 5;
+                        break;
+                }
+                do {
+                    s = promptForShip(name, length);
+                }
+                while(player2.addShip(s));
+            }
+        }
     }
 
     public void printBoardIndexing() {
@@ -65,7 +134,30 @@ public class BattleshipGame {
         return Integer.parseInt(move);
     }
 
+    public Ship promptForShip(String name, int length) {
+        System.out.println("Where would you like to put your " + name + "?");
+        Scanner input = new Scanner(System.in);
+        Orientation state = Orientation.HORIZONTAL;
+        String index = input.nextLine();
+        while(index.toLowerCase().equals("r")) {
+            System.out.println("Where would you like to put your " + name + "?");
+            input = new Scanner(System.in);
+            if(state == Orientation.HORIZONTAL)
+                state = Orientation.VERTICAL;
+            else
+                state = Orientation.HORIZONTAL;
+            index = input.nextLine();
+        }
+        int firstIndex = Integer.parseInt(index);
+        return new Ship(length, firstIndex, state, name);
+    }
+
     public void checkGameOver() {
         isGameOver =  player1.checkGameOver() || player2.checkGameOver();
+    }
+
+    public void resetGame() {
+        player1.reset();
+        player2.reset();
     }
 }

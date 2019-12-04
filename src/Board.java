@@ -5,28 +5,37 @@ import java.util.Random;
 
 public class Board {
     //Fireable spaces with a ship on them
-    HashSet<Integer> shipSpaces;
+    private HashSet<Integer> shipSpaces;
     //Fireable spaces
-    HashSet<Integer> availableMoves;
+    private HashSet<Integer> availableMoves;
     //All floating ships on the board
-    ArrayList<Ship> floatingShips;
+    private ArrayList<Ship> floatingShips;
     //All ships that started on the board
-    ArrayList<Ship> shipList;
+    private ArrayList<Ship> shipList;
     //Number of vertically connected spaces of length averageShipLength that each square is part of
-    HashMap<Integer, Integer> verticalConnections;
+    private HashMap<Integer, Integer> verticalConnections;
     //Number of horizontally connected spaces of length averageShipLength that each square is part of
-    HashMap<Integer, Integer> horizontalConnections;
+    private HashMap<Integer, Integer> horizontalConnections;
     //Sum of each space's vertical and horizontal connections
-    HashMap<Integer, Integer> totalConnections;
-    //List of all moves made
-    ArrayList<Integer> hits;
+    private HashMap<Integer, Integer> totalConnections;
+    //List of hits that need to be cleared
+    private ArrayList<Integer> hits;
     //Average length of all surviving Ships
-    int averageShipLength;
+    private int averageShipLength;
     //Difficulty
-    int difficulty;
+    private int difficulty;
+    //List of all hits made ever for toString purposes
+    private HashSet<Integer> allHits;
+    //Whether or not the last move hit
+    private boolean lastMoveHit;
+    //Whether or not the last move sunk a ship
+    private boolean lastMoveSunk;
+    //What the last ship sunk was
+    private Ship lastSunkShip;
 
     public Board() {
         shipSpaces = new HashSet<>();
+        allHits = new HashSet<>();
 
         availableMoves = new HashSet<>();
         for(int i = 0; i < 100; i++) {
@@ -46,6 +55,10 @@ public class Board {
         updateTotalConnections();
 
         hits = new ArrayList<>();
+
+        lastMoveHit = false;
+        lastMoveSunk = false;
+        lastSunkShip = null;
     }
 
     //Returns false if ship could not be added, true otherwise
@@ -88,9 +101,18 @@ public class Board {
 
                     }
                     floatingShips.remove(s);
+                    lastMoveSunk = true;
+                    lastSunkShip = s;
+                }
+                else {
+                    lastMoveSunk = false;
                 }
                 shipSpaces.remove(index);
-
+                allHits.add(index);
+                lastMoveHit = true;
+            }
+            else {
+                lastMoveHit = false;
             }
             return true;
         }
@@ -300,6 +322,18 @@ public class Board {
         return true;
     }
 
+    public boolean isLastMoveHit() {
+        return lastMoveHit;
+    }
+
+    public boolean isLastMoveSunk() {
+        return lastMoveSunk;
+    }
+
+    public Ship getLastSunkShip() {
+        return lastSunkShip;
+    }
+
     public void reset() {
         resetAvailableMoves();
         shipSpaces.clear();
@@ -308,8 +342,12 @@ public class Board {
         horizontalConnections.clear();
         totalConnections.clear();
         hits.clear();
-        averageShipLength = 0;
+        averageShipLength = 3;
         shipList.clear();
+        allHits.clear();
+        lastMoveSunk = false;
+        lastMoveHit = false;
+        lastSunkShip = null;
     }
 
     private void resetAvailableMoves() {
@@ -352,6 +390,54 @@ public class Board {
             return true;
         }
         return false;
+    }
 
+    public String toString() {
+        String toReturn = "\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ\n";
+        for(int i = 0; i < 10; i++) {
+            toReturn += i + "\t";
+            for(int j = 0; j < 10; j++) {
+                if(availableMoves.contains(i * 10 + j)) {
+                    toReturn += "\t";
+                }
+                else {
+                    if(allHits.contains(i * 10 + j)) {
+                        toReturn += "X\t";
+                    }
+                    else {
+                        toReturn += "O\t";
+                    }
+                }
+            }
+            toReturn += "\n";
+        }
+        return toReturn;
+    }
+
+    public String toStringWithShipSpaces() {
+        String toReturn = "\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ\n";
+        for(int i = 0; i < 10; i++) {
+            toReturn += i + "\t";
+            for(int j = 0; j < 10; j++) {
+                if(availableMoves.contains(i * 10 + j)) {
+                    if(shipSpaces.contains(i * 10 + j)) {
+                        toReturn += ".\t";
+                    }
+                    else {
+                        toReturn += "\t";
+                    }
+                }
+                else {
+                    if(allHits.contains(i * 10 + j)) {
+                        toReturn += "X\t";
+                    }
+                    else {
+                        toReturn += "O\t";
+                    }
+                }
+            }
+            toReturn += "\n";
+        }
+        return toReturn;
     }
 }
