@@ -3,36 +3,70 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
+/**
+ * @author Dylan Bui
+ */
 public class Board {
-    //Fireable spaces with a ship on them
+    /**
+     * A Set containing all of the spaces containing ships that can still be fired at.
+     */
     private HashSet<Integer> shipSpaces;
-    //Fireable spaces
+    /**
+     * A Set containing all moves that can still be made.
+     */
     private HashSet<Integer> availableMoves;
-    //All floating ships on the board
+    /**
+     * An ArrayList that holds all of the Ship objects that have not sunk yet.
+     */
     private ArrayList<Ship> floatingShips;
-    //All ships that started on the board
+    /**
+     * An ArrayList that holds all of the ships on the board, regardless of whether they have been sunk.
+     */
     private ArrayList<Ship> shipList;
-    //Number of vertically connected spaces of length averageShipLength that each square is part of
+    /**
+     * A Map that maps the number of possible vertical ship orientations that could contain a given square.
+     */
     private HashMap<Integer, Integer> verticalConnections;
-    //Number of horizontally connected spaces of length averageShipLength that each square is part of
+    /**
+     * A Map that maps the number of possible horizontal ship orientations that could contain a given square.
+     */
     private HashMap<Integer, Integer> horizontalConnections;
-    //Sum of each space's vertical and horizontal connections
+    /**
+     * A Map that maps the number of total possible ship orientations that could contain a given square.
+     */
     private HashMap<Integer, Integer> totalConnections;
-    //List of hits that need to be cleared
+    /**
+     * An ArrayList containing the indices of squares that have been hit but not searched.
+     */
     private ArrayList<Integer> hits;
-    //Average length of all surviving Ships
+    /**
+     * Average length of all surviving Ships
+     */
     private int averageShipLength;
-    //Difficulty
+    /**
+     * An int representing the difficulty of the computer.
+     */
     private int difficulty;
-    //List of all hits made ever for toString purposes
+    /**
+     * A Set containing all spaces that have been hit.
+     */
     private HashSet<Integer> allHits;
-    //Whether or not the last move hit
+    /**
+     * A boolean storing true if the last move made on the board was a hit.
+     */
     private boolean lastMoveHit;
-    //Whether or not the last move sunk a ship
+    /**
+     * A boolean storing true if the last move made on the board sunk a ship.
+     */
     private boolean lastMoveSunk;
-    //What the last ship sunk was
+    /**
+     * The most recently sunken ship on the board.
+     */
     private Ship lastSunkShip;
 
+    /**
+     * Default Constructor. It initializes all values.
+     */
     public Board() {
         shipSpaces = new HashSet<>();
         allHits = new HashSet<>();
@@ -61,15 +95,34 @@ public class Board {
         lastSunkShip = null;
     }
 
-    //Returns false if ship could not be added, true otherwise
+    /**
+     * A Method that attempts to add a Ship object to shipList as well as floatingShips.
+     * @param index The index of the desired front of the Ship.
+     * @param length The length of the Ship.
+     * @param state The Orientation of the Ship, horizontal or vertical.
+     * @return true if the Ship was successfully added, false otherwise.
+     */
     public boolean addShip(int index, int length, Orientation state) {
         return addShip(new Ship(length, index, state));
     }
 
+    /**
+     * An overloading on the previous addShip method that also includes the name of the Ship.
+     * @param index The index of the desired front of the Ship.
+     * @param length The length of the Ship.
+     * @param state The Orientation of the Ship, horizontal or vertical.
+     * @param name String name of the Ship, such as "Patrol Boat".
+     * @return true if the Ship was successfully added.
+     */
     public boolean addShip(int index, int length, Orientation state, String name) {
         return addShip(new Ship(length, index, state, name));
     }
 
+    /**
+     * An overloading on the previous addShip methods that accepts a ship.
+     * @param ship The Ship to be added.
+     * @return true if the Ship was successfully added.
+     */
     public boolean addShip(Ship ship) {
         boolean possibleShip = true;
         for(int i = 0; i < ship.getLength(); i++) {
@@ -102,6 +155,12 @@ public class Board {
         return true;
     }
 
+    /**
+     * Fires at a space on the board, if the space is in the availableMoves. Also updates whether or not the move was a
+     * hit, as well as whether the move sank any ships.
+     * @param index the index to fire at.
+     * @return true if the space could be fired at.
+     */
     public boolean fireAtSpace(int index) {
         if(availableMoves.contains(index)) {
             availableMoves.remove(index);
@@ -133,10 +192,21 @@ public class Board {
         return false;
     }
 
+    /**
+     * Checks a space to see if a ship is at that space and the space has not been hit.
+     * @param index the space to check.
+     * @return true if the space has a ship and has not been hit yet.
+     */
     public boolean checkShipAtSpace(int index) {
         return shipSpaces.contains(index);
     }
 
+    /**
+     * For the computer to use when playing the game. If there are hits that have been made previously that have not
+     * sunken ships, the algorithm prioritizes those spaces until the ship has been sunken. Otherwise, choose the space
+     * with the highest number of connections.
+     * @return the index of the "best" move.
+     */
     public int getBestMove() {
         if(hits.size() != 0) {
             int currIndex = hits.get(0);
@@ -176,6 +246,9 @@ public class Board {
         }
     }
 
+    /**
+     * Randomly places all 5 Ships onto the board.
+     */
     public void placeShipsRandomly() {
         int[] lengths = {2, 3, 3, 4, 5};
         String[] names = {"Patrol Boat", "Submarine", "Destroyer", "Battleship", "Carrier"};
@@ -208,6 +281,11 @@ public class Board {
 
     }
 
+    /**
+     * Creates an ArrayList of the indices with the most connections. Ignores every other space in a checkerboard-like
+     * pattern, to keep parity.
+     * @return an ArrayList of the indices with the highest number of connections.
+     */
     private ArrayList<Integer> generateMaxConnections() {
         updateVerticalConnections();
         updateHorizontalConnections();
@@ -235,6 +313,9 @@ public class Board {
         return toReturn;
     }
 
+    /**
+     * Updates the averageShipLength field.
+     */
     private void updateAverageShipLength() {
         int averageLength = 0;
         updateFloatingShips();
@@ -245,6 +326,9 @@ public class Board {
         averageShipLength = averageLength;
     }
 
+    /**
+     * Updates the list of floating Ships to see if any Ships on the list have been sunk.
+     */
     private void updateFloatingShips() {
         ArrayList<Ship> newList = new ArrayList<>();
         for(Ship ship : floatingShips) {
@@ -262,6 +346,9 @@ public class Board {
         floatingShips = newList;
     }
 
+    /**
+     * Updates the number of vertical connections.
+     */
     private void updateVerticalConnections() {
         verticalConnections = new HashMap<>();
         int lastRow = 9 - (averageShipLength - 1);
@@ -279,6 +366,9 @@ public class Board {
         }
     }
 
+    /**
+     * Updates the number of horizontal connections.
+     */
     private void updateHorizontalConnections() {
         horizontalConnections = new HashMap<>();
         int lastColumn = 9 - (averageShipLength - 1);
@@ -297,6 +387,9 @@ public class Board {
         }
     }
 
+    /**
+     * Sums the number of vertical and horizontal connections to update total connections.
+     */
     private void updateTotalConnections() {
         for(int i = 0; i < 100; i++) {
             if(horizontalConnections.containsKey(i) && verticalConnections.containsKey(i)) {
@@ -314,6 +407,12 @@ public class Board {
         }
     }
 
+    /**
+     * Checks to see if there is a vertical strip of length spaces starting at space of possible moves.
+     * @param space space to start at
+     * @param length the length of the strip
+     * @return true if all spaces can still be fired on.
+     */
     private boolean checkVerticalConnection(int space, int length) {
 
         for(int i = 0; i < length; i++) {
@@ -323,6 +422,12 @@ public class Board {
         return true;
     }
 
+    /**
+     * A variation of the checkVerticalConnections method that takes a start and end point.
+     * @param start index to start at.
+     * @param end index to end at.
+     * @return true if all spaces can still be fired on.
+     */
     private boolean checkVerticalConnection2(int start, int end) {
         int length = end/10 - start/10;
         for(int i = 0; i < length; i++) {
@@ -332,14 +437,28 @@ public class Board {
         return true;
     }
 
+    /**
+     * Checks to see if there is a horizontal strip of length spaces starting at space of possible moves.
+     * @param space space to start at
+     * @param length the length of the strip
+     * @return true if all spaces can still be fired on.
+     */
     private boolean checkHorizontalConnection(int space, int length) {
         for(int i = 0; i < length; i++) {
             if(!availableMoves.contains(space + i))
+                return false;
+            if(space / 10 != (space + i) / 10)
                 return false;
         }
         return true;
     }
 
+    /**
+     * A variation of the checkHorizontalConnection method that takes a start and end point.
+     * @param start index to start at.
+     * @param end index to end at.
+     * @return true if all spaces can still be fired on.
+     */
     private boolean checkHorizontalConnection2(int start, int end) {
         int length = end - start;
         for(int i = 0; i < length; i++) {
@@ -349,18 +468,33 @@ public class Board {
         return true;
     }
 
+    /**
+     * Returns the value of lastMoveHit.
+     * @return lastMoveHit.
+     */
     public boolean isLastMoveHit() {
         return lastMoveHit;
     }
 
+    /**
+     * Returns the value of lastMoveSunk.
+     * @return lastMoveSunk.
+     */
     public boolean isLastMoveSunk() {
         return lastMoveSunk;
     }
 
+    /**
+     * Returns value of lastSunkShip.
+     * @return lastSunkShip
+     */
     public Ship getLastSunkShip() {
         return lastSunkShip;
     }
 
+    /**
+     * Resets the Board.
+     */
     public void reset() {
         resetAvailableMoves();
         shipSpaces.clear();
@@ -377,6 +511,9 @@ public class Board {
         lastSunkShip = null;
     }
 
+    /**
+     * Fills availableMoves with all 100 spaces on the board.
+     */
     private void resetAvailableMoves() {
         availableMoves.clear();
         for(int i = 0; i < 100; i++) {
@@ -384,6 +521,11 @@ public class Board {
         }
     }
 
+    /**
+     * Checks if a shot at a space will sink a ship.
+     * @param index the space to check
+     * @return true if the shot will sink a ship.
+     */
     private boolean checkIfShipWillSink(int index) {
         for(Ship s : floatingShips) {
             if(s.getSpaces().contains(index)) {
@@ -399,6 +541,11 @@ public class Board {
         return true;
     }
 
+    /**
+     * Returns the ship containing a given index.
+     * @param index the index to search for.
+     * @return the Ship if there is a ship containing the index, else null.
+     */
     private Ship shipWithIndex(int index) {
         for(Ship s : floatingShips) {
             if(s.getSpaces().contains(index))
@@ -407,11 +554,20 @@ public class Board {
         return null;
     }
 
+    /**
+     * Checks whether the game has ended.
+     * @return true if the game has ended.
+     */
     public boolean checkGameOver() {
 //        System.out.println("floatingShips size: " + floatingShips.size() + "\navailableMoves size: " + availableMoves.size());
         return floatingShips.size() == 0 || availableMoves.size() == 0;
     }
 
+    /**
+     * Removes a Ship from shipList and floatingShips.
+     * @param s the Ship to remove.
+     * @return true if the Ship was successfully removed.
+     */
     public boolean removeShip(Ship s) {
         if(shipList.contains(s)) {
             shipList.remove(s);
@@ -422,8 +578,8 @@ public class Board {
     }
 
     /**
-     * Returns a String representation of the entire board.
-     * @return
+     * Returns a String representation of the entire board, including bordering indexing.
+     * @return the String representation
      */
     public String toString() {
         String toReturn = "\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ\n";
@@ -448,8 +604,8 @@ public class Board {
     }
 
     /**
-     *
-     * @return
+     * Modification of toString that shows where shipSpaces are.
+     * @return the String representation
      */
     public String toStringWithShipSpaces() {
         String toReturn = "\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ\n";
@@ -478,6 +634,10 @@ public class Board {
         return toReturn;
     }
 
+    /**
+     * Returns the ArrayList of the floatingShips.
+     * @return floatingShips.
+     */
     public ArrayList<Ship> getFloatingShips() {
         return floatingShips;
     }
