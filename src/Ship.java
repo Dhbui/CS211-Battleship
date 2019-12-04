@@ -64,9 +64,11 @@ public class Ship {
     }
 
     public boolean equals(Object o) {
-        if(!o.getClass().equals(this.getClass())) {
+        if(!(o instanceof Ship)) {
             return false;
         }
+        if(o == this)
+            return true;
         Ship s = (Ship) o;
         if(s.getLength() != length)
             return false;

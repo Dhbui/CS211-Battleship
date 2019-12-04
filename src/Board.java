@@ -140,26 +140,26 @@ public class Board {
     public int getBestMove() {
         if(hits.size() != 0) {
             int currIndex = hits.get(0);
-            while(hits.contains(currIndex)) {
+            while(hits.contains(currIndex) && currIndex >= 0) {
                 currIndex = currIndex - 10;
             }
             if(availableMoves.contains(currIndex))
                 return currIndex;
             currIndex = hits.get(0);
-            while(hits.contains(currIndex)) {
+            while(hits.contains(currIndex) && currIndex <= 99) {
                 currIndex = currIndex + 10;
             }
             if(availableMoves.contains(currIndex))
                 return currIndex;
             currIndex = hits.get(0);
-            while(hits.contains(currIndex)) {
+            while(hits.contains(currIndex) && currIndex / 10 == hits.get(0) / 10) {
                 currIndex--;
             }
             if(availableMoves.contains(currIndex)) {
                 return currIndex;
             }
             currIndex = hits.get(0);
-            while(hits.contains(currIndex)) {
+            while(hits.contains(currIndex) && currIndex / 10 == hits.get(0) / 10) {
                 currIndex++;
             }
             if(availableMoves.contains(currIndex))
@@ -182,9 +182,19 @@ public class Board {
         for(int i = 0; i < 5; i++) {
             int index;
             Orientation o = null;
-            do {
+            index = (int) (Math.random() * 100);
+            int orientation = (int) (Math.random() * 2);
+            switch(orientation) {
+                case 0:
+                    o = Orientation.HORIZONTAL;
+                    break;
+                case 1:
+                    o = Orientation.VERTICAL;
+                    break;
+            }
+            while(!addShip(index, lengths[i], o, names[i])) {
                 index = (int) (Math.random() * 100);
-                int orientation = (int) (Math.random() * 2);
+                orientation = (int) (Math.random() * 2);
                 switch(orientation) {
                     case 0:
                         o = Orientation.HORIZONTAL;
@@ -194,7 +204,6 @@ public class Board {
                         break;
                 }
             }
-            while(addShip(index, lengths[i], o, names[i]));
         }
 
     }
@@ -203,6 +212,10 @@ public class Board {
         updateVerticalConnections();
         updateHorizontalConnections();
         updateTotalConnections();
+
+        for(int i = 0; i < 100; i+=2) {
+            totalConnections.remove(i + ((i/10)%2), totalConnections.get(i + ((i/10)%2)));
+        }
 
         int max = 0;
         for(int key : totalConnections.keySet()) {
@@ -376,8 +389,9 @@ public class Board {
             if(s.getSpaces().contains(index)) {
                 for(int space : s.getSpaces()) {
                     if(space != index) {
-                        if(availableMoves.contains(space))
+                        if(availableMoves.contains(space)) {
                             return false;
+                        }
                     }
                 }
             }
@@ -394,6 +408,7 @@ public class Board {
     }
 
     public boolean checkGameOver() {
+//        System.out.println("floatingShips size: " + floatingShips.size() + "\navailableMoves size: " + availableMoves.size());
         return floatingShips.size() == 0 || availableMoves.size() == 0;
     }
 

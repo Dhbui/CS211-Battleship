@@ -8,6 +8,7 @@ public class BattleshipGame {
     private boolean isGameOver;
     private String type;
     private boolean cpuPlaying;
+    private boolean player1Win;
 
     public BattleshipGame(String type) {
         player1 = new Board();
@@ -32,11 +33,19 @@ public class BattleshipGame {
                 turnCount++;
                 System.out.println("Player1's Move:");
                 System.out.println(player2);
-                System.out.println();
-                if(player2.isLastMoveHit())
+                if(player2.isLastMoveHit()) {
                     System.out.println("Hit!");
-                if(player2.isLastMoveSunk()) {
-                    System.out.println("You've sunk a " + player2.getLastSunkShip().getType() + "!\n\n");
+                    if (player2.isLastMoveSunk()) {
+                        if(cpuPlaying) {
+                            System.out.println("You've sunk the Computer's " + player2.getLastSunkShip().getType() + "!\n");
+                        }
+                        else {
+                            System.out.println("You've sunk Player 2's " + player2.getLastSunkShip().getType() + "!\n");
+                        }
+                    }
+                }
+                else {
+                    System.out.println("Miss!\n");
                 }
             }
             else {
@@ -44,6 +53,21 @@ public class BattleshipGame {
                     int move = player1.getBestMove();
                     player1.fireAtSpace(move);
                     System.out.println("Computer's Move:");
+                    player1Turn = true;
+                    turnCount++;
+                    System.out.println(player1);
+                    if(player1.isLastMoveHit()) {
+                        System.out.println("Hit!");
+                        if(player1.isLastMoveSunk()) {
+                            System.out.println("The Computer sunk your " + player1.getLastSunkShip().getType() + "!\n");
+                        }
+                        else {
+                            System.out.println();
+                        }
+                    }
+                    else {
+                        System.out.println("Miss!\n");
+                    }
                 }
                 else {
                     System.out.println("Player2 Move:");
@@ -53,25 +77,38 @@ public class BattleshipGame {
                         move = promptMove();
                     }
                     System.out.println("Player2's Move:");
+                    player1Turn = true;
+                    turnCount++;
+                    System.out.println(player1);
+                    if(player1.isLastMoveHit()) {
+                        System.out.println("Hit!");
+                        if(player1.isLastMoveSunk()) {
+                            System.out.println("You've sunk Player 1's " + player1.getLastSunkShip().getType() + "!\n");
+                        }
+                        else {
+                            System.out.println();
+                        }
+                    }
+                    else {
+                        System.out.println("Miss!\n");
+                    }
 
                 }
-                player1Turn = true;
-                turnCount++;
-                System.out.println(player1);
-                System.out.println();
-                if(player1.isLastMoveHit())
-                    System.out.println("Hit!");
-                if(player1.isLastMoveSunk()) {
-                    System.out.println("You've sunk a " + player1.getLastSunkShip().getType() + "!\n\n");
-                }
+
+
             }
             checkGameOver();
         }
         System.out.println("Game Over!");
-        if (player1.getFloatingShips().size() == 0)
-            System.out.print("Player2 Wins!");
-        else
+        if (player1.getFloatingShips().size() == 0) {
+            System.out.println("Player2 Wins!");
+            player1Win = false;
+        }
+        else {
             System.out.println("Player1 Wins!");
+            player1Win = true;
+        }
+        System.out.println("Game took " + (turnCount + 1) + "turns");
     }
 
     public void setupGame() {
@@ -172,8 +209,13 @@ public class BattleshipGame {
         return new Ship(length, firstIndex, state, name);
     }
 
-    public void checkGameOver() {
-        isGameOver =  player1.checkGameOver() || player2.checkGameOver();
+    public boolean checkGameOver() {
+        boolean p1check = player1.checkGameOver();
+//        System.out.println("P1check: " + p1check);
+        boolean p2check = player2.checkGameOver();
+//        System.out.println("P2check: " + p2check);
+        isGameOver = p1check || p2check;
+        return isGameOver;
     }
 
     public void resetGame() {
@@ -184,36 +226,64 @@ public class BattleshipGame {
     public void testTwoCPUS() {
         player1.placeShipsRandomly();
         player2.placeShipsRandomly();
-
         while(!isGameOver) {
+            try {
+                Thread.sleep(550);
+            }
+            catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
             if (player1Turn) {
                 int move = player2.getBestMove();
                 player2.fireAtSpace(move);
-                System.out.println("Computer's Move:");
+                System.out.println("Computer 1's Move:");
                 player1Turn = false;
                 turnCount++;
-                System.out.println(player2);
-                System.out.println();
-                if (player2.isLastMoveHit())
+                System.out.println(player2.toStringWithShipSpaces());
+                if (player2.isLastMoveHit()) {
                     System.out.println("Hit!");
-                if (player2.isLastMoveSunk()) {
-                    System.out.println("You've sunk a " + player2.getLastSunkShip().getType() + "!\n\n");
+                    if (player2.isLastMoveSunk()) {
+                        System.out.println("Computer 1 sunk Computer 2's " + player2.getLastSunkShip().getType() + "!\n\n");
+                    }
+                    else {
+                        System.out.println();
+                    }
                 }
-            } else {
+                else {
+                    System.out.println("Miss!\n");
+                }
+            }
+            else {
                 int move = player1.getBestMove();
                 player1.fireAtSpace(move);
-                System.out.println("Computer's Move:");
+                System.out.println("Computer 2's Move:");
                 player1Turn = true;
                 turnCount++;
-                System.out.println(player1);
-                System.out.println();
-                if (player1.isLastMoveHit())
+                System.out.println(player1.toStringWithShipSpaces());
+                if (player1.isLastMoveHit()) {
                     System.out.println("Hit!");
-                if (player1.isLastMoveSunk()) {
-                    System.out.println("You've sunk a " + player1.getLastSunkShip().getType() + "!\n\n");
+                    if (player1.isLastMoveSunk()) {
+                        System.out.println("Computer 2 sunk Computer 1's " + player1.getLastSunkShip().getType() + "!\n");
+                    }
+                    else {
+                        System.out.println();
+                    }
+                }
+                else {
+                    System.out.println("Miss!\n");
                 }
             }
             checkGameOver();
         }
+        System.out.println("Game Over!");
+        if (player1.getFloatingShips().size() == 0) {
+            System.out.println("Computer 2 Wins!");
+            player1Win = false;
+        }
+        else {
+            System.out.println("Computer 1 Wins!");
+            player1Win = true;
+        }
+        System.out.println("Game took " + (turnCount + 1) + " turns");
     }
 }
