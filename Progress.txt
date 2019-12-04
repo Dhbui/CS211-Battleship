@@ -11,20 +11,31 @@ This includes:
         A) Store available spaces for firing moves
         B) Store spaces that are occupied by ships
         C) Store all floating ships on the board
-        D) Add ships
+        D) Add ships to the board
         E) Fire at spaces
     2) A Ship object that
         A) Holds information about what spaces are occupied by that ship
-        B) Stores the length of the ship
+        B) Stores the length of the ship (2, 3, 4, or 5)
+        C) Stores the type of ship (e.g. "Patrol Boat", "Carrier", etc.)
     3) An Enum that represents the orientation (Horizontal or Vertical) of a ship
+    4) Computerized Decision-Making
+        A)  The computer's decisions for shots will be based on:
+            1) Previous shots that have hit ships
+                i) After hitting a shot, the index of the hit will be added to an array of shots that need to be cleared by the computer.
+                ii) After hitting a shot, the computer will fire in an upwards direction from the hit until it misses or the ship sinks
+                iii) Then it will travel downwards if the ship has not sunk yet or until it misses
+                iv) Then it will travel left
+                v) Then it will travel right
+                vi) After a ship is sunk, all of the hit spaces pertaining to that ship are removed from the list of spaces to be cleared
+                vii) Effectively, this will attempt to clear spaces around a hit until one ship, or multiple ships that are touching, have sunk
+            2) A probability calculation based on how likely a space is occupied by a ship
+                i) A connection is defined as a possible placement of a ship that would occupy a given space
+                ii) The computer analyzes number of connections for each space based on the average length of ships remaining
+                iii) The computer will fire at the space with most connections if there are no current hits to be cleared
+        B) Placement of ships is completely randomized.
+    5) A BattleshipGame object, which will handle the management of two Board objects, and run the game
+        A) This object can handle both a single player game against a CPU and a local multiplayer game between two people
 
 Current Work:
 GUI for the user to play the game.
-Computerized decision making.
-    The computer's decisions for shots will be based on:
-        1) Previous shots that have hit ships
-            i) After hitting a shot, the computer will circle all orientations around the hit until it makes a second hit.
-            ii) The computer will then follow the direction of the two shots until hit sinks the ship or hits water.
-            iii) The computer will then continue in the opposite direction if the ship has not sunk yet.
-        2) Utilizing the average length of remaining ships to randomly fire at spaces that have a straight connected length equal to or greater than the average.
 Additionally, creating a difficulty setting for the computer's decision making which would decrease the quality and increase randomness of each shot is under consideration.
