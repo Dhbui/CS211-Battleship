@@ -24,7 +24,10 @@ public class BattleshipGame {
             if(player1Turn) {
                 System.out.println("Player1 Move:");
                 int move = promptMove();
-                player2.fireAtSpace(move);
+                while(!player2.fireAtSpace(move)) {
+                    System.out.println("Player1 Move:");
+                    move = promptMove();
+                }
                 player1Turn = false;
                 turnCount++;
                 System.out.println("Player1's Move:");
@@ -45,7 +48,10 @@ public class BattleshipGame {
                 else {
                     System.out.println("Player2 Move:");
                     int move = promptMove();
-                    player1.fireAtSpace(move);
+                    while(!player1.fireAtSpace(move)) {
+                        System.out.println("Player2 Move:");
+                        move = promptMove();
+                    }
                     System.out.println("Player2's Move:");
 
                 }

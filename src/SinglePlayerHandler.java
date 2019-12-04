@@ -3,8 +3,5 @@ public class SinglePlayerHandler {
         BattleshipGame singlePlayer = new BattleshipGame("Single");
         singlePlayer.setupGame();
         singlePlayer.runGame();
-
-
-
     }
 }
