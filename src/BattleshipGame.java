@@ -299,4 +299,36 @@ public class BattleshipGame {
         System.out.println("Game took " + (turnCount + 1) + " turns");
         System.out.println("Move List: \n" + movesMade);
     }
+
+    public void testTwoCPUSNoPrinting() {
+        player1.placeShipsRandomly();
+        player2.placeShipsRandomly();
+        while(!isGameOver) {
+            if (player1Turn) {
+                int move = player2.getBestMove();
+                player2.fireAtSpace(move);
+                movesMade.add(move);
+                player1Turn = false;
+                turnCount++;
+            }
+            else {
+                int move = player1.getBestMove();
+                player1.fireAtSpace(move);
+                movesMade.add(move);
+                player1Turn = true;
+                turnCount++;
+            }
+            checkGameOver();
+        }
+        if (player1.getFloatingShips().size() == 0) {
+            player1Win = false;
+        }
+        else {
+            player1Win = true;
+        }
+    }
+
+    public boolean getWinner() {
+        return player1Win;
+    }
 }
