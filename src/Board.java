@@ -421,6 +421,10 @@ public class Board {
         return false;
     }
 
+    /**
+     * Returns a String representation of the entire board.
+     * @return
+     */
     public String toString() {
         String toReturn = "\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ\n";
         for(int i = 0; i < 10; i++) {
@@ -443,6 +447,10 @@ public class Board {
         return toReturn;
     }
 
+    /**
+     *
+     * @return
+     */
     public String toStringWithShipSpaces() {
         String toReturn = "\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ\n";
         for(int i = 0; i < 10; i++) {
@@ -472,5 +480,37 @@ public class Board {
 
     public ArrayList<Ship> getFloatingShips() {
         return floatingShips;
+    }
+
+    /**
+     * Returns an int[] array representing the current state of the game board.
+     * 0 is an empty unfired space.
+     * 1 is a missed shot.
+     * 2 is a unfired ship space.
+     * 3 is a hit shot.
+     * @return an int[] array representing the board.
+     */
+    public int[] getIntArrayRepresentation() {
+        int[] toReturn = new int[100];
+        for(int i = 0; i < 100; i++) {
+            if(availableMoves.contains(i)) {
+                for(Ship s : shipList) {
+                    if(s.getSpaces().contains(i)) {
+                        toReturn[i] = 2;
+                        break;
+                    }
+                }
+                if(toReturn[i] != 2)
+                    toReturn[i] = 0;
+            }
+            else {
+                if(allHits.contains(i))
+                    toReturn[i] = 3;
+                else {
+                    toReturn[i] = 1;
+                }
+            }
+        }
+        return toReturn;
     }
 }

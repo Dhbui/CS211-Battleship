@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class BattleshipGame {
@@ -9,6 +10,7 @@ public class BattleshipGame {
     private String type;
     private boolean cpuPlaying;
     private boolean player1Win;
+    private ArrayList<Integer> movesMade;
 
     public BattleshipGame(String type) {
         player1 = new Board();
@@ -18,6 +20,7 @@ public class BattleshipGame {
         isGameOver = false;
         this.type = type;
         cpuPlaying = type.equals("Single");
+        movesMade = new ArrayList<>();
     }
 
     public void runGame() {
@@ -29,6 +32,7 @@ public class BattleshipGame {
                     System.out.println("Player1 Move:");
                     move = promptMove();
                 }
+                movesMade.add(move);
                 player1Turn = false;
                 turnCount++;
                 System.out.println("Player1's Move:");
@@ -76,6 +80,7 @@ public class BattleshipGame {
                         System.out.println("Player2 Move:");
                         move = promptMove();
                     }
+                    movesMade.add(move);
                     System.out.println("Player2's Move:");
                     player1Turn = true;
                     turnCount++;
@@ -221,6 +226,11 @@ public class BattleshipGame {
     public void resetGame() {
         player1.reset();
         player2.reset();
+        movesMade = new ArrayList<>();
+        player1Turn = Math.random() >= 0.5;
+        turnCount = 0;
+        isGameOver = false;
+
     }
 
     public void testTwoCPUS() {
@@ -236,6 +246,7 @@ public class BattleshipGame {
             if (player1Turn) {
                 int move = player2.getBestMove();
                 player2.fireAtSpace(move);
+                movesMade.add(move);
                 System.out.println("Computer 1's Move:");
                 player1Turn = false;
                 turnCount++;
@@ -256,6 +267,7 @@ public class BattleshipGame {
             else {
                 int move = player1.getBestMove();
                 player1.fireAtSpace(move);
+                movesMade.add(move);
                 System.out.println("Computer 2's Move:");
                 player1Turn = true;
                 turnCount++;
@@ -285,5 +297,6 @@ public class BattleshipGame {
             player1Win = true;
         }
         System.out.println("Game took " + (turnCount + 1) + " turns");
+        System.out.println("Move List: \n" + movesMade);
     }
 }
