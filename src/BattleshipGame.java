@@ -64,9 +64,14 @@ public class BattleshipGame {
     public void runGame() {
         while(!isGameOver) {
             if(player1Turn) {
+                System.out.println("Opponent's Board:");
+                System.out.println(player2);
                 System.out.println("Player1 Move:");
                 int move = promptMove();
                 while(!player2.fireAtSpace(move)) {
+                    System.out.println("Invalid move");
+                    System.out.println("Opponent's Board:");
+                    System.out.println(player2);
                     System.out.println("Player1 Move:");
                     move = promptMove();
                 }
@@ -112,9 +117,14 @@ public class BattleshipGame {
                     }
                 }
                 else {
+                    System.out.println("Opponent's Board:");
+                    System.out.println(player1);
                     System.out.println("Player2 Move:");
                     int move = promptMove();
                     while(!player1.fireAtSpace(move)) {
+                        System.out.println("Invalid move");
+                        System.out.println("Opponent's Board:");
+                        System.out.println(player2);
                         System.out.println("Player2 Move:");
                         move = promptMove();
                     }
@@ -179,17 +189,20 @@ public class BattleshipGame {
                     break;
             }
             System.out.println(player1.toStringWithShipSpaces());
-            s = promptForShip(name, length);
+            s = promptForShip(name, length, player1);
             while(!player1.addShip(s)) {
                 System.out.println(player1.toStringWithShipSpaces());
-                s = promptForShip(name, length);
+                s = promptForShip(name, length, player1);
             }
-            System.out.println(player1.toStringWithShipSpaces());
         }
+        System.out.println(player1.toStringWithShipSpaces());
         if(cpuPlaying) {
             player2.placeShipsRandomly();
         }
         else {
+            for(int i = 0; i < 10; i++) {
+                System.out.println();
+            }
             for(int i = 0; i < 5; i++) {
                 String name = shipNames[i];
                 int length = 0;
@@ -210,12 +223,15 @@ public class BattleshipGame {
                         break;
                 }
                 System.out.println(player2.toStringWithShipSpaces());
-                s = promptForShip(name, length);
+                s = promptForShip(name, length, player2);
                 while(!player2.addShip(s)) {
                     System.out.println(player2.toStringWithShipSpaces());
-                    s = promptForShip(name, length);
+                    s = promptForShip(name, length, player2);
                 }
-                System.out.println(player2.toStringWithShipSpaces());
+            }
+            System.out.println(player2.toStringWithShipSpaces());
+            for(int i = 0; i < 10; i++) {
+                System.out.println();
             }
         }
     }
@@ -254,17 +270,20 @@ public class BattleshipGame {
      * @param length the length of the ship
      * @return a Ship Object created using name, length, user-selected Orientation, and spaces.
      */
-    public Ship promptForShip(String name, int length) {
-        System.out.println("Where would you like to put your " + name + "?");
-        Scanner input = new Scanner(System.in);
+    public Ship promptForShip(String name, int length, Board player) {
         Orientation state = Orientation.HORIZONTAL;
+        System.out.println("Where would you like to put your " + name + "?");
+        System.out.println("The orientation is currently: " + state + "\nType \"R\" to rotate.");
+        Scanner input = new Scanner(System.in);
         String index = input.nextLine();
         while(index.toLowerCase().equals("r")) {
-            System.out.println("Where would you like to put your " + name + "?");
             if(state == Orientation.HORIZONTAL)
                 state = Orientation.VERTICAL;
             else
                 state = Orientation.HORIZONTAL;
+            System.out.println(player.toStringWithShipSpaces());
+            System.out.println("Where would you like to put your " + name + "?");
+            System.out.println("The orientation is currently: " + state + "\nType \"R\" to rotate.");
             index = input.nextLine();
         }
         int firstIndex = parseInput(index);
@@ -292,6 +311,10 @@ public class BattleshipGame {
             }
         }
         if(containsLetter) {
+            if(input.length() == 3) {
+                int row = (int) (halfIndex - 'a');
+                return row * 10 + 9;
+            }
             int row = (int) (halfIndex - 'a');
             int indexOfLetter = lowercase.indexOf(halfIndex);
             int indexOfNumber = (indexOfLetter + 1) % 2;
