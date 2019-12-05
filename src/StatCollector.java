@@ -1,6 +1,10 @@
 import java.time.Duration;
 import java.time.Instant;
 
+/**
+ * This class is made to test how long it takes the computer to play against itself.
+ * @author Dylan Bui
+ */
 public class StatCollector {
     public static void main(String[] args) {
         BattleshipGame test = new BattleshipGame("");

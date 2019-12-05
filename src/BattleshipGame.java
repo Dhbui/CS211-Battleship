@@ -1,17 +1,52 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * An object that can manage and run the game.
+ * @author Dylan Bui
+ */
 public class BattleshipGame {
+    /**
+     * Board Object for the first player.
+     */
     private Board player1;
+    /**
+     * Board object for the second player, is the Computer when only singleplayer.
+     */
     private Board player2;
+    /**
+     * Boolean that tracks who's turn it is.
+     */
     private boolean player1Turn;
+    /**
+     * Int that tracks the total number of moves made in the game.
+     */
     private int turnCount;
+    /**
+     * Boolean that tracks whether or not the game is over.
+     */
     private boolean isGameOver;
+    /**
+     * String that determines whether or not the game is Singleplayer, Multiplayer, or 2 Computers.
+     */
     private String type;
+    /**
+     * Boolean that tracks whether or not the game is Singleplayer
+     */
     private boolean cpuPlaying;
+    /**
+     * Boolean that tracks who the winner of the game is.
+     */
     private boolean player1Win;
+    /**
+     * ArrayList that keeps track of every single move made in the game.
+     */
     private ArrayList<Integer> movesMade;
 
+    /**
+     * Only constructor. Initializes fields and takes the type of game as input.
+     * @param type the type of game.
+     */
     public BattleshipGame(String type) {
         player1 = new Board();
         player2 = new Board();
@@ -23,6 +58,9 @@ public class BattleshipGame {
         movesMade = new ArrayList<>();
     }
 
+    /**
+     * Method that runs the game, alternating between each player until the game is over.
+     */
     public void runGame() {
         while(!isGameOver) {
             if(player1Turn) {
@@ -116,6 +154,9 @@ public class BattleshipGame {
         System.out.println("Game took " + (turnCount + 1) + "turns");
     }
 
+    /**
+     * Sets up the game from scratch. Takes inputs for ship placement.
+     */
     public void setupGame() {
         String[] shipNames = {"Patrol Boat", "Submarine", "Destroyer", "Battleship", "Carrier"};
         for(int i = 0; i < 5; i++) {
@@ -179,6 +220,9 @@ public class BattleshipGame {
         }
     }
 
+    /**
+     * Prints out an empty board.
+     */
     public void printBoardIndexing() {
         System.out.println("\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ");
         for(int i = 1; i <= 10; i++) {
@@ -190,6 +234,10 @@ public class BattleshipGame {
         }
     }
 
+    /**
+     * Uses the terminal to prompt the user for a move.
+     * @return the index of the desired move.
+     */
     public int promptMove() {
         System.out.println("What's your move?");
         Scanner input = new Scanner(System.in);
@@ -197,6 +245,12 @@ public class BattleshipGame {
         return Integer.parseInt(move);
     }
 
+    /**
+     * Prompts the user for a space to put a certain ship.
+     * @param name the type of the ship that is being created, such as "Destroyer"
+     * @param length the length of the ship
+     * @return a Ship Object created using name, length, user-selected Orientation, and spaces.
+     */
     public Ship promptForShip(String name, int length) {
         System.out.println("Where would you like to put your " + name + "?");
         Scanner input = new Scanner(System.in);
@@ -214,6 +268,10 @@ public class BattleshipGame {
         return new Ship(length, firstIndex, state, name);
     }
 
+    /**
+     * Checks whether the game is over.
+     * @return true if the game is over.
+     */
     public boolean checkGameOver() {
         boolean p1check = player1.checkGameOver();
 //        System.out.println("P1check: " + p1check);
@@ -223,6 +281,9 @@ public class BattleshipGame {
         return isGameOver;
     }
 
+    /**
+     * Resets all fields to initial values.
+     */
     public void resetGame() {
         player1.reset();
         player2.reset();
@@ -233,6 +294,9 @@ public class BattleshipGame {
 
     }
 
+    /**
+     * A modification of the runGame method that plays two Computers against each other.
+     */
     public void testTwoCPUS() {
         player1.placeShipsRandomly();
         player2.placeShipsRandomly();
@@ -300,6 +364,9 @@ public class BattleshipGame {
         System.out.println("Move List: \n" + movesMade);
     }
 
+    /**
+     * A modification of the testTwoCPUS method that does not print the game.
+     */
     public void testTwoCPUSNoPrinting() {
         player1.placeShipsRandomly();
         player2.placeShipsRandomly();

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Random;
 
 /**
+ * An Object class that contains details about one Board in Battleship. A game is made of 2 Board objects.
  * @author Dylan Bui
  */
 public class Board {
