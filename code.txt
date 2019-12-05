@@ -1,0 +1,177 @@
+
+***********
+battleshipGame needs to extend Canvas so we can create a new window
+
+***********in battleshipGame constructor *********************
+new Window(600,600,"Battleship", this);
+
+***********need to render the board while the game is running || while(!isGameOver)***************************
+
+render();
+
+***********render();*********************
+public void render(){
+BufferStrategy bs = this.getBufferStrategy();
+    		if(bs == null) {
+    			this.createBufferStrategy(3);
+    			return; 
+    		}
+    		
+    		Graphics g = bs.getDrawGraphics();
+    		
+    		try {
+    			gridImage = ImageIO.read(new File("FinalGrid.jpeg"));
+    			
+    		}
+    		catch(IOException ex){
+    			System.out.println(ex);
+    		}
+    		g.drawImage(gridImage, 0, 0, obs);
+    		
+    		g.dispose();
+    		bs.show();
+}
+*********************main method in battleshipGame************************************
+ public static void main() {
+    	new BattleshipGame("Single");
+    }
+
+
+********************need a render method within ship to add the ships*******************
+
+question? are we adding the ships randomly? If not,, where do I scan in the information?
+
+public void render(Graphics g, int x, int y) {
+    	
+    	try {
+			boatImage = ImageIO.read(new File("boat.png"));
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		} 
+		g.drawImage(boatImage, x, y, obs);
+    }
+
+
+***************call render method within ship constructor****************
+	render(g, firstIndex, firstIndex+length0);
+
+
+
+**************WE NEED A WINDOW CLASS*****************
+import java.awt.Canvas;
+import java.awt.Dimension;
+
+import javax.swing.JFrame;
+
+//Adds the frame and all that jazz, starts the game
+public class Window extends Canvas {
+	
+	public Window(int width, int height, String name, BattleshipGame game) {
+		JFrame f = new JFrame(name);
+		
+		f.setPreferredSize(new Dimension(width, height));
+		f.setMaximumSize(new Dimension(width, height));
+		f.setMinimumSize(new Dimension(width, height));
+		
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setResizable(false);
+		f.setLocationRelativeTo(null);
+		f.add(game);   
+		f.setVisible(true);
+		//We need to use a method named run() specifically because threads use the start
+		// method which calls the start method
+		//Without using the run method there would be no way of starting the game
+		game.run();
+	}
+}
+
+
+
+
+
+********************it would be easier to cover spaces with x's and dots for when the spots are hit*********************************
+		when the spots are hit....remove that space from the hash/set
+		then render an x or dot on top of the spot
+
+		know which picture to render based on the value of the spot
+
+	//for when it hits a boat
+	public void render(Graphics g, int x, int y) {
+    	
+    	try {
+			xImage = ImageIO.read(new File("XFinalProject.png"));
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		} 
+		g.drawImage(xImage, x, y, obs);
+  	  }
+
+
+
+	OR
+
+	//DOT TO SHOW THE SPACE WAS ALREADY CHOSEN
+	g.setColor(Color.BLACK);
+	g.fillOval(x, y, 50, 50);
+
+
+**********************Whose turn is it?********************
+	based on the state of the game (player ones turn or player two)
+	//draw a green light for whoevers turn it is and then a red light for who ever it is not
+
+
+	//green circle
+	g.setColor(Color.GREEN);
+	g.fillOval(x,y,25, 25);
+
+
+	//Red circle
+	g.setColor(Color.RED);
+	g.fillOval(x,y,25,25);
+
+
+
+
+********************WIN/LOSE*****************
+
+		depending on the win lose state
+	//WINNER
+	public void render(Graphics g, int x, int y) {
+    	
+    	try {
+			winnerImage = ImageIO.read(new File("WinnerPicture.png"));
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		} 
+		g.drawImage(winnerImage, x, y, obs);
+  	  }
+
+	//LOSER
+	public void render(Graphics g, int x, int y) {
+    	
+    	try {
+			loserImage = ImageIO.read(new File("Loser.png"));
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		} 
+		g.drawImage(loserImage, x, y, obs);
+  	  }
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+	
