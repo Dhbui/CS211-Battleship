@@ -323,7 +323,7 @@ public class Board {
         for(Ship ship : floatingShips) {
             averageLength += ship.getLength();
         }
-        averageLength = averageLength/shipSpaces.size();
+        averageLength = averageLength/floatingShips.size();
         averageShipLength = averageLength;
     }
 
@@ -583,9 +583,10 @@ public class Board {
      * @return the String representation
      */
     public String toString() {
-        String toReturn = "\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ\n";
+        String[] rows = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+        String toReturn = "\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10\n";
         for(int i = 0; i < 10; i++) {
-            toReturn += i + "\t";
+            toReturn += rows[i] + "\t";
             for(int j = 0; j < 10; j++) {
                 if(availableMoves.contains(i * 10 + j)) {
                     toReturn += "\t";
@@ -609,9 +610,10 @@ public class Board {
      * @return the String representation
      */
     public String toStringWithShipSpaces() {
-        String toReturn = "\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ\n";
+        String[] rows = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+        String toReturn = "\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10\n";
         for(int i = 0; i < 10; i++) {
-            toReturn += i + "\t";
+            toReturn += rows[i] + "\t";
             for(int j = 0; j < 10; j++) {
                 if(availableMoves.contains(i * 10 + j)) {
                     if(shipSpaces.contains(i * 10 + j)) {

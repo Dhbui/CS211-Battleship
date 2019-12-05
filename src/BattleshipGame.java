@@ -224,9 +224,11 @@ public class BattleshipGame {
      * Prints out an empty board.
      */
     public void printBoardIndexing() {
-        System.out.println("\tA\tB\tC\tD\tE\tF\tG\tH\tI\tJ");
+        String[] rows = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
+        String toReturn = "\t1\t2\t3\t4\t5\t6\t7\t8\t9\t10\n";
+        System.out.println(toReturn);
         for(int i = 1; i <= 10; i++) {
-            String tabs = i + "";
+            String tabs = rows[i] + "";
             for(int j = 0; j < 10; j++) {
                 tabs += "\t";
             }
@@ -290,11 +292,11 @@ public class BattleshipGame {
             }
         }
         if(containsLetter) {
-            int column = (int) (halfIndex - 'a');
+            int row = (int) (halfIndex - 'a');
             int indexOfLetter = lowercase.indexOf(halfIndex);
             int indexOfNumber = (indexOfLetter + 1) % 2;
             String number = lowercase.charAt(indexOfNumber) + "";
-            int row = Integer.parseInt(number);
+            int column = Integer.parseInt(number) - 1;
             return row * 10 + column;
         }
         else {
