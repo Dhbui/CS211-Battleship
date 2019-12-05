@@ -242,7 +242,8 @@ public class BattleshipGame {
         System.out.println("What's your move?");
         Scanner input = new Scanner(System.in);
         String move = input.nextLine();
-        return Integer.parseInt(move);
+        int toReturn = parseInput(move);
+        return toReturn;
     }
 
     /**
@@ -264,8 +265,41 @@ public class BattleshipGame {
                 state = Orientation.HORIZONTAL;
             index = input.nextLine();
         }
-        int firstIndex = Integer.parseInt(index);
+        int firstIndex = parseInput(index);
         return new Ship(length, firstIndex, state, name);
+    }
+
+    /**
+     * Parses an input from the user so the program can handle a flat out letter as well as the indexing usually used in
+     * Battleship.
+     * @param input String to parse
+     * @return index from String
+     */
+    private int parseInput(String input) {
+        String lowercase = input.toLowerCase();
+        char[] alphabet = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
+        boolean containsLetter = false;
+        char halfIndex = 'a';
+        for(char letter : lowercase.toCharArray()) {
+            for(char secondLetter : alphabet) {
+                if(letter == secondLetter) {
+                    containsLetter = true;
+                    halfIndex = letter;
+                    break;
+                }
+            }
+        }
+        if(containsLetter) {
+            int column = (int) (halfIndex - 'a');
+            int indexOfLetter = lowercase.indexOf(halfIndex);
+            int indexOfNumber = (indexOfLetter + 1) % 2;
+            String number = lowercase.charAt(indexOfNumber) + "";
+            int row = Integer.parseInt(number);
+            return row * 10 + column;
+        }
+        else {
+            return Integer.parseInt(input);
+        }
     }
 
     /**
