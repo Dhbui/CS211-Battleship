@@ -12,10 +12,18 @@ public class BattleshipDriver {
             String players = input.nextLine();
             if (players.toLowerCase().equals("zero") || players.toLowerCase().equals("0")) {
                 game = new BattleshipGame("");
+                System.out.println("What difficulty do you want the first computer to be? (0, 1, 2, or 3)");
+                game.setPlayer1Difficulty(Integer.parseInt(input.nextLine()));
+                System.out.println("What difficulty do you want the second computer to be? (0, 1, 2, or 3)");
+                game.setPlayer2Difficulty(Integer.parseInt(input.nextLine()));
+                System.out.println("How quickly would you like the computer to make a move (in milliseconds)?");
+                game.setWaitTime(Integer.parseInt(input.nextLine()));
                 game.testTwoCPUS();
             }
             else if (players.toLowerCase().equals("one") || players.toLowerCase().equals("1")) {
                 game = new BattleshipGame("Single");
+                System.out.println("What difficulty do you want the computer to be? (0, 1, 2, or 3)");
+                game.setPlayer2Difficulty(Integer.parseInt(input.nextLine()));
                 game.setupGame();
                 game.runGame();
             }

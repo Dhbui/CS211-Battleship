@@ -94,6 +94,8 @@ public class Board {
         lastMoveHit = false;
         lastMoveSunk = false;
         lastSunkShip = null;
+
+        difficulty = 3;
     }
 
     /**
@@ -209,41 +211,48 @@ public class Board {
      * @return the index of the "best" move.
      */
     public int getBestMove() {
-        if(hits.size() != 0) {
-            int currIndex = hits.get(0);
-            while(hits.contains(currIndex) && currIndex >= 0) {
-                currIndex = currIndex - 10;
+        double chance = Math.random();
+        if(chance >= difficulty/3.0) {
+            if (hits.size() != 0) {
+                int currIndex = hits.get(0);
+                while (hits.contains(currIndex) && currIndex >= 0) {
+                    currIndex = currIndex - 10;
+                }
+                if (availableMoves.contains(currIndex))
+                    return currIndex;
+                currIndex = hits.get(0);
+                while (hits.contains(currIndex) && currIndex <= 99) {
+                    currIndex = currIndex + 10;
+                }
+                if (availableMoves.contains(currIndex))
+                    return currIndex;
+                currIndex = hits.get(0);
+                while (hits.contains(currIndex) && currIndex / 10 == hits.get(0) / 10) {
+                    currIndex--;
+                }
+                if (availableMoves.contains(currIndex)) {
+                    return currIndex;
+                }
+                currIndex = hits.get(0);
+                while (hits.contains(currIndex) && currIndex / 10 == hits.get(0) / 10) {
+                    currIndex++;
+                }
+                if (availableMoves.contains(currIndex))
+                    return currIndex;
+                return -1;
+            } else {
+
+                updateAverageShipLength();
+
+                ArrayList<Integer> maxConnections = generateMaxConnections();
+                int moveToMake = maxConnections.get((int) (Math.random() * (maxConnections.size())));
+                return moveToMake;
             }
-            if(availableMoves.contains(currIndex))
-                return currIndex;
-            currIndex = hits.get(0);
-            while(hits.contains(currIndex) && currIndex <= 99) {
-                currIndex = currIndex + 10;
-            }
-            if(availableMoves.contains(currIndex))
-                return currIndex;
-            currIndex = hits.get(0);
-            while(hits.contains(currIndex) && currIndex / 10 == hits.get(0) / 10) {
-                currIndex--;
-            }
-            if(availableMoves.contains(currIndex)) {
-                return currIndex;
-            }
-            currIndex = hits.get(0);
-            while(hits.contains(currIndex) && currIndex / 10 == hits.get(0) / 10) {
-                currIndex++;
-            }
-            if(availableMoves.contains(currIndex))
-                return currIndex;
-            return -1;
         }
         else {
-
-            updateAverageShipLength();
-
-            ArrayList<Integer> maxConnections = generateMaxConnections();
-            int moveToMake = maxConnections.get((int) (Math.random() * (maxConnections.size())));
-            return moveToMake;
+            ArrayList<Integer> availableMovesArray = new ArrayList<>(availableMoves);
+            int index = (int)(Math.random() * availableMoves.size());
+            return index;
         }
     }
 
@@ -280,6 +289,10 @@ public class Board {
             }
         }
 
+    }
+
+    public void setDifficulty(int difficulty) {
+        this.difficulty = difficulty;
     }
 
     /**

@@ -42,6 +42,10 @@ public class BattleshipGame {
      * ArrayList that keeps track of every single move made in the game.
      */
     private ArrayList<Integer> movesMade;
+    /**
+     * Time to wait for CPU in Milliseconds
+     */
+    private int waitTime;
 
     /**
      * Only constructor. Initializes fields and takes the type of game as input.
@@ -56,6 +60,7 @@ public class BattleshipGame {
         this.type = type;
         cpuPlaying = type.equals("Single");
         movesMade = new ArrayList<>();
+        waitTime = 550;
     }
 
     /**
@@ -353,6 +358,10 @@ public class BattleshipGame {
 
     }
 
+    public void setWaitTime(int waitTime) {
+        this.waitTime = waitTime;
+    }
+
     /**
      * A modification of the runGame method that plays two Computers against each other.
      */
@@ -361,7 +370,7 @@ public class BattleshipGame {
         player2.placeShipsRandomly();
         while(!isGameOver) {
             try {
-                Thread.sleep(550);
+                Thread.sleep(waitTime);
             }
             catch(InterruptedException ex) {
                 Thread.currentThread().interrupt();
@@ -468,5 +477,13 @@ public class BattleshipGame {
      */
     public int getTurnCount() {
         return turnCount;
+    }
+
+    public void setPlayer1Difficulty(int difficulty) {
+        player1.setDifficulty(difficulty);
+    }
+
+    public void setPlayer2Difficulty(int difficulty) {
+        player2.setDifficulty(difficulty);
     }
 }
