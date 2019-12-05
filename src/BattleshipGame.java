@@ -479,10 +479,18 @@ public class BattleshipGame {
         return turnCount;
     }
 
+    /**
+     * Sets the difficulty of player1 Board.
+     * @param difficulty desired difficulty
+     */
     public void setPlayer1Difficulty(int difficulty) {
         player1.setDifficulty(difficulty);
     }
 
+    /**
+     * Sets the difficulty of player1 Board.
+     * @param difficulty desired difficulty
+     */
     public void setPlayer2Difficulty(int difficulty) {
         player2.setDifficulty(difficulty);
     }
