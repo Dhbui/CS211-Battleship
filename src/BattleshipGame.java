@@ -395,7 +395,19 @@ public class BattleshipGame {
         }
     }
 
+    /**
+     * Returns the winner of the game
+     * @return true if player1 won
+     */
     public boolean getWinner() {
         return player1Win;
+    }
+
+    /**
+     * Returns the number of turns.
+     * @return number of turns
+     */
+    public int getTurnCount() {
+        return turnCount;
     }
 }
