@@ -46,6 +46,10 @@ public class BattleshipGame {
      * Time to wait for CPU in Milliseconds
      */
     private int waitTime;
+    /**
+     * True if there is currently a game in progress.
+     */
+    private boolean gameInProgress;
 
     /**
      * Only constructor. Initializes fields and takes the type of game as input.
@@ -61,6 +65,7 @@ public class BattleshipGame {
         cpuPlaying = type.equals("Single");
         movesMade = new ArrayList<>();
         waitTime = 550;
+        gameInProgress = false;
     }
 
     /**
@@ -342,6 +347,8 @@ public class BattleshipGame {
         boolean p2check = player2.checkGameOver();
 //        System.out.println("P2check: " + p2check);
         isGameOver = p1check || p2check;
+        if(isGameOver)
+            gameInProgress = false;
         return isGameOver;
     }
 
@@ -355,6 +362,7 @@ public class BattleshipGame {
         player1Turn = Math.random() >= 0.5;
         turnCount = 0;
         isGameOver = false;
+        gameInProgress = false;
 
     }
 
@@ -455,7 +463,7 @@ public class BattleshipGame {
             }
             checkGameOver();
         }
-        if (player1.getFloatingShips().size() == 0) {
+        if(player1.getFloatingShips().size() == 0) {
             player1Win = false;
         }
         else {
@@ -501,7 +509,7 @@ public class BattleshipGame {
      * @return true if fired without problem, false if not player's turn or not in availableMoves for player1's board.
      */
     public boolean player1FireAtSpace(int space) {
-        if(!player1Turn) {
+        if(!player1Turn && gameInProgress) {
             return player1.fireAtSpace(space);
         }
         return false;
@@ -513,10 +521,19 @@ public class BattleshipGame {
      * @return true if fired without problem, false if not player's turn or not in availableMoves for player2's board.
      */
     public boolean player2FireAtSpace(int space) {
-        if(player1Turn) {
+        if(player1Turn && gameInProgress) {
             return player2.fireAtSpace(space);
         }
         return false;
+    }
+
+    /**
+     * Resets the game, gets it ready for start.
+     */
+    public void startGame() {
+        resetGame();
+
+        gameInProgress = true;
     }
 
 }
