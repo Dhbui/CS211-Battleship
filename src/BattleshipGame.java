@@ -494,4 +494,29 @@ public class BattleshipGame {
     public void setPlayer2Difficulty(int difficulty) {
         player2.setDifficulty(difficulty);
     }
+
+    /**
+     * Fires at a space in player1's board.
+     * @param space space to fire at
+     * @return true if fired without problem, false if not player's turn or not in availableMoves for player1's board.
+     */
+    public boolean player1FireAtSpace(int space) {
+        if(!player1Turn) {
+            return player1.fireAtSpace(space);
+        }
+        return false;
+    }
+
+    /**
+     * Fires at a space in player2's board.
+     * @param space space to fire at
+     * @return true if fired without problem, false if not player's turn or not in availableMoves for player2's board.
+     */
+    public boolean player2FireAtSpace(int space) {
+        if(player1Turn) {
+            return player2.fireAtSpace(space);
+        }
+        return false;
+    }
+
 }
