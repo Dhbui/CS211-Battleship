@@ -1,0 +1,201 @@
+BufferStrategy bs = this.getBufferStrategy();
+		if(bs == null) {
+			this.createBufferStrategy(3);
+			return; 
+		}
+		
+		Graphics2D g = (Graphics2D) bs.getDrawGraphics();
+		
+		//BOARD
+		g.setColor(Color.BLUE);
+		g.fillRect(0, 0, 1400, 700);
+		
+		g.setColor(Color.CYAN);
+		g.fillRect(100,200,1400,700);
+		
+		g.setColor(Color.BLUE);
+		g.fillRect(500, 0, 250, 900);
+		g.setColor(Color.CYAN);
+		g.fillRect(100, 200, 400,400);
+		
+		g.setColor(Color.BLUE);
+		g.fillRect(1150, 0, 250, 700);
+		
+		g.fillRect(0, 600, 1400, 100);
+		
+		g.setColor(Color.GREEN);
+		Font f = new Font("Times New Roman", Font.BOLD, 50);
+		g.setFont(f);
+		g.drawString("Your board", 150, 75);
+		g.drawString("Opponent's board", 770, 75);
+		g.setColor(Color.YELLOW);
+		
+		//labels for the x and y axis
+		g.setFont(new Font("Times New Roman", Font.ITALIC, 30));
+		
+		//numbers for the PLAYERS board
+		g.drawString("1  2   3   4   5   6   7   8  9  10", 125, 175);
+		//numbers for the OPPONENTS boa rd
+		g.drawString("1  2   3   4   5   6   7   8  9  10", 775, 175);
+		
+		
+		g.setFont(new Font("Times New Roman", Font.ITALIC, 25));
+		
+		//Letters for the PLAYERS board
+		g.drawString("A", 50, 225);
+		g.drawString("B", 50, 265);
+		g.drawString("C", 50, 305);
+		g.drawString("D", 50, 345);
+		g.drawString("E", 50, 385);
+		g.drawString("F", 50, 425);
+		g.drawString("G", 50, 465);
+		g.drawString("H", 50, 505);
+		g.drawString("I", 50, 545);
+		g.drawString("J",50, 585);
+		
+		//Letters for the OPPONENTS board
+		g.drawString("A", 700, 225);
+		g.drawString("B", 700, 265);
+		g.drawString("C", 700, 305);
+		g.drawString("D", 700, 345);
+		g.drawString("E", 700, 385);
+		g.drawString("F", 700, 425);
+		g.drawString("G", 700, 465);
+		g.drawString("H", 700, 505);
+		g.drawString("I", 700, 545);
+		g.drawString("J", 700, 585);
+		
+		//Prompt
+		g.setFont(new Font("Arial", Font.BOLD, 25));
+		g.drawString("Place your ship_", 250, 635);
+		
+		
+		/****
+		 * 
+		 * placing the tiles so that they alternate color and also adding them to several lists
+		 * 
+		 * 
+		 * what we need to do is add tile objects
+		 * 
+		 * ***/
+		
+		for(int i=100; i<500; i+=40) {
+			g.setColor(Color.BLACK);
+			for(int j=200; j<=560; j+=40) {
+				g.drawRect(i, j, 40, 40);
+			}
+		}
+		
+		for(int i=750; i<1150; i+=40) {
+			g.setColor(Color.BLACK);
+			for(int j=200; j<=575; j+=40) {
+				g.drawRect(i, j, 40, 40);
+			}
+		}
+		
+		/////////ROTATION
+		AffineTransform a = AffineTransform.getTranslateInstance(100, 200);
+		a.rotate(Math.toRadians(90));
+		/*
+		try {
+			boatImage = ImageIO.read(new File("Submarine.png"));
+			
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		}
+		g.drawImage(boatImage,a, obs);*/
+		//g.drawImage(boatImage, 100, 200, obs);
+		
+		
+		/*patrol boat graphic*
+		try {
+			boatImage = ImageIO.read(new File("patrolboat.png"));
+			
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		}
+		g.drawImage(boatImage, 100, 240, obs);
+
+		*/
+		/*destroyer graphic
+		try {
+			boatImage = ImageIO.read(new File("destroyer.png"));
+			
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		}
+		g.drawImage(boatImage, 100, 280, obs);
+		*/
+		
+		/*carrier graphic
+		try {
+			boatImage = ImageIO.read(new File("carrier.png"));
+			
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		}
+		g.drawImage(boatImage, 100, 320, obs);
+		*/
+		
+		
+		/*battleship graphic*/
+		/*
+		try {
+			boatImage = ImageIO.read(new File("boatShip.png"));
+			
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		}
+		g.drawImage(boatImage, 100, 360, obs);
+		*/
+		
+		Boat b = new Boat(100,360);
+		b.render(g);
+		/*
+		for(int i=1; i<=length; i++) {
+			for(int y;) {
+				
+			}
+		}
+		*/
+		/***HIT OR MISS GRAPHIC**/
+		try {
+			hitMissImage = ImageIO.read(new File("sunk2.png"));
+			
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		}
+		g.drawImage(hitMissImage, 100, 200, obs);
+		
+		
+		try {
+			hitMissImage = ImageIO.read(new File("hit.png"));
+			
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		}
+		g.drawImage(hitMissImage, 100, 240, obs);
+		
+		try {
+			hitMissImage = ImageIO.read(new File("missDot.png"));
+			
+		}
+		catch(IOException ex){
+			System.out.println(ex);
+		}
+		g.drawImage(hitMissImage, 100, 280, obs);
+		
+		/**/
+		
+		
+		
+		//end, dispose
+		g.dispose();
+		bs.show();
