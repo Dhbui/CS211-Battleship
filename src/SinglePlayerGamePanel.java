@@ -33,6 +33,10 @@ public class SinglePlayerGamePanel extends JPanel {
      */
     private JButton switchOrientation;
     /**
+     * JButton for resetting the game.
+     */
+    private JButton reset;
+    /**
      * The BattleShipGame being used for the game.
      */
     private BattleshipGame game;
@@ -175,6 +179,12 @@ public class SinglePlayerGamePanel extends JPanel {
         c.gridx = 2;
         c.gridy = 1;
         center.add(cpu, c);
+
+        reset = new JButton("Reset");
+        reset.addActionListener(new ResetGameListener());
+        reset.setEnabled(false);
+        reset.setVisible(false);
+        add(reset, BorderLayout.SOUTH);
     }
 
     /**
@@ -229,6 +239,8 @@ public class SinglePlayerGamePanel extends JPanel {
                 if(game.checkGameOver()) {
                     disableAllButtons();
                     prompt.setText("Game Over! You Win!");
+                    reset.setEnabled(true);
+                    reset.setVisible(true);
                 }
                 else {
                     int cpuMove = game.player1.getBestMove();
@@ -242,6 +254,8 @@ public class SinglePlayerGamePanel extends JPanel {
                     if (game.checkGameOver()) {
                         disableAllButtons();
                         prompt.setText("Game Over! You lose!");
+                        reset.setEnabled(true);
+                        reset.setVisible(true);
                     }
                 }
             }
@@ -257,6 +271,25 @@ public class SinglePlayerGamePanel extends JPanel {
             orientation = orientation.getOpposite();
             prompt.setText("Click to place your " + shipNames[currentShip] + ". Current Orientation: " + orientation);
             switchOrientation.setText("Switch Orientation to " + orientation.getOpposite());
+        }
+    }
+
+    /**
+     * ActionListener for the reset JButton, it resets the game to starting position.
+     */
+    private class ResetGameListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            enablePlayer1Buttons();
+            enablePlayer2Buttons();
+            colorAllButtonsBlue();
+            currentShip = 0;
+            game.player1.reset();
+            game.player2.reset();
+            inSetup = true;
+            switchOrientation.setVisible(true);
+            prompt.setText("Click to place your " + shipNames[currentShip] + ". Current Orientation: " + orientation);
+            reset.setEnabled(false);
+            reset.setVisible(false);
         }
     }
 
@@ -305,6 +338,16 @@ public class SinglePlayerGamePanel extends JPanel {
     private void enablePlayer2Buttons() {
         for(int i = 0; i < 100; i++) {
             cpuBoard[i].setEnabled(true);
+        }
+    }
+
+    /**
+     * Sets the color of all the JButtons in the game to blue.
+     */
+    private void colorAllButtonsBlue() {
+        for(int i = 0; i < 100; i++) {
+            cpuBoard[i].setBackground(Color.blue);
+            player1Board[i].setBackground(Color.blue);
         }
     }
 }
