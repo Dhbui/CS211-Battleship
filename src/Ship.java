@@ -42,6 +42,7 @@ public class Ship {
             }
         }
         orientation = state;
+        type = "No type";
     }
 
     /**
@@ -156,5 +157,13 @@ public class Ship {
      */
     public Orientation getOrientation() {
         return orientation;
+    }
+
+    /**
+     * Returns the type of the ship
+     * @return the ship's name
+     */
+    public String toString() {
+        return type;
     }
 }

@@ -1,5 +1,5 @@
 /**
- * A Handler class to handle the creation and running of the BattleshipGame Object.
+ * A Handler class to handle the creation and running of the BattleshipGame Object. Terminal ONLY.
  * @author Dylan Bui
  */
 public class SinglePlayerHandler {

@@ -95,7 +95,7 @@ public class Board {
         lastMoveSunk = false;
         lastSunkShip = null;
 
-        difficulty = 3;
+        difficulty = 0;
     }
 
     /**
@@ -250,9 +250,9 @@ public class Board {
             }
         }
         else {
-            ArrayList<Integer> availableMovesArray = new ArrayList<>(availableMoves);
+            Integer[] availableMovesArray = availableMoves.toArray(new Integer[availableMoves.size()]);
             int index = (int)(Math.random() * availableMoves.size());
-            return index;
+            return availableMovesArray[index];
         }
     }
 
@@ -540,7 +540,7 @@ public class Board {
      * @param index the space to check
      * @return true if the shot will sink a ship.
      */
-    private boolean checkIfShipWillSink(int index) {
+    public boolean checkIfShipWillSink(int index) {
         for(Ship s : floatingShips) {
             if(s.getSpaces().contains(index)) {
                 for(int space : s.getSpaces()) {
@@ -560,7 +560,7 @@ public class Board {
      * @param index the index to search for.
      * @return the Ship if there is a ship containing the index, else null.
      */
-    private Ship shipWithIndex(int index) {
+    public Ship shipWithIndex(int index) {
         for(Ship s : floatingShips) {
             if(s.getSpaces().contains(index))
                 return s;
@@ -690,4 +690,11 @@ public class Board {
         return toReturn;
     }
 
+    /**
+     * Returns the difficulty of the Board.
+     * @return the difficulty
+     */
+    public int getDifficulty() {
+        return difficulty;
+    }
 }

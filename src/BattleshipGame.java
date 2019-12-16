@@ -9,11 +9,11 @@ public class BattleshipGame {
     /**
      * Board Object for the first player.
      */
-    private Board player1;
+    Board player1;
     /**
      * Board object for the second player, is the Computer when only singleplayer.
      */
-    private Board player2;
+    Board player2;
     /**
      * Boolean that tracks who's turn it is.
      */
@@ -366,6 +366,10 @@ public class BattleshipGame {
 
     }
 
+    /**
+     * Sets the time to wait for the computer to make and display the next move.
+     * @param waitTime time to wait in milliseconds
+     */
     public void setWaitTime(int waitTime) {
         this.waitTime = waitTime;
     }
@@ -534,6 +538,22 @@ public class BattleshipGame {
         resetGame();
 
         gameInProgress = true;
+    }
+
+    /**
+     * Returns the difficulty of the player1 Board.
+     * @return the difficulty
+     */
+    public int getPlayer1Difficulty() {
+        return player1.getDifficulty();
+    }
+
+    /**
+     * Returns the difficulty of the player2 Board.
+     * @return the difficulty
+     */
+    public int getPlayer2Difficulty() {
+        return player2.getDifficulty();
     }
 
 }
