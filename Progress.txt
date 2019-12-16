@@ -35,7 +35,8 @@ This includes:
         B) Placement of ships is completely randomized.
     5) A BattleshipGame object, which will handle the management of two Board objects, and run the game
         A) This object can handle both a single player game against a CPU and a local multiplayer game between two people
+    6) GUI Currently exists and works for Singleplayer Mode only. Game is run through BattleshipDriver class.
 
 Current Work:
-GUI for the user to play the game.
+Bettering the GUI for the users and adding increased functionality.
 Additionally, creating a difficulty setting for the computer's decision making which would decrease the quality and increase randomness of each shot is under consideration.
